@@ -1,4 +1,4 @@
-// pages/api/dashboard.js
+// pages/api/billing.js
 import axios from "axios";
 import clientPromise from "../../lib/mongodb";
 
@@ -12,7 +12,9 @@ export default async function handler(req, res) {
   if (!shopData) return res.status(404).json({ error: "Shop not found" });
 
   const accessToken = shopData.accessToken;
-  if (!accessToken) return res.redirect(`/auth?shop=${shop}`);
+  if (!accessToken) {
+    return res.status(401).json({ error: "Unauthorized or token missing" });
+  }
 
   const mutation = `
     mutation {
