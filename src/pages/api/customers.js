@@ -43,7 +43,7 @@ export default async function handler(req, res) {
     );
 
     const customers = response.data.data.customers.edges.map((e) => e.node);
-    res.status(200).json({ customers });
+    res.status(200).json(customers);
   } catch (err) {
     console.error(err.response?.data || err.message);
     res.status(500).json({ error: "Failed to fetch customers" });
