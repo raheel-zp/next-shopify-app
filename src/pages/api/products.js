@@ -25,5 +25,5 @@ export default async function handler(req, res) {
   );
   const products = productsResp.data.data.products.edges.map((e) => e.node);
 
-  res.status(200).json({ products });
+  res.status(200).json(products);
 }

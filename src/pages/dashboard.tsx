@@ -34,7 +34,7 @@ export default function Dashboard() {
     async function fetchData() {
       try {
         const p = await axios.get<Product[]>(`/api/products?shop=${shop}`);
-        setProducts(p.data.products);
+        setProducts(p.data || []);
 
         // const c = await axios.get<Customer[]>(`/api/customers?shop=${shop}`);
         // setCustomers(c.data);
