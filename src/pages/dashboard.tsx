@@ -56,9 +56,12 @@ export default function Dashboard() {
 
     async function confirmBilling() {
       try {
-        await axios.post(`/api/billing/confirm`, { shop, charge_id });
-        // Optional: remove charge_id from URL after confirming
-        router.replace(`/dashboard?shop=${shop}`, undefined, { shallow: true });
+        const response = await axios.post(`/api/billing/confirm`, { shop, charge_id });
+        if (response.data.success) {
+          setBillingActive(true);
+          router.replace(`/dashboard?shop=${shop}`, undefined, { shallow: true });
+        }
+
       } catch (err) {
         console.error("Failed to confirm billing", err);
       }
