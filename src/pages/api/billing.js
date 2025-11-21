@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     mutation {
       appSubscriptionCreate(
         name: "Basic Plan",
-        returnUrl: "${HOST}/dashboard?shop=${shop}",
+        returnUrl: "${process.env.MONGO_DB_URI}/dashboard?shop=${shop}",
         test: true,
         lineItems: [{ plan: { appRecurringPricingDetails: { price: { amount: 5.0, currencyCode: USD } } } }]
       ) {
