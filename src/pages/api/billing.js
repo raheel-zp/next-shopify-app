@@ -35,5 +35,5 @@ export default async function handler(req, res) {
     { headers: { "X-Shopify-Access-Token": accessToken } }
   );
   const confirmationUrl = resp.data.data.appSubscriptionCreate.confirmationUrl;
-  res.status(200).json(confirmationUrl);
+  res.status(200).json({ url: confirmationUrl });
 }
