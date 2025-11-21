@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Page,
   Layout,
@@ -5,56 +6,85 @@ import {
   DataTable,
   Banner,
   Button,
+  BlockStack,
+  Text,
 } from "@shopify/polaris";
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { useRouter } from 'next/router'; // Import the router
+import { useRouter } from "next/router";
 
-export default function Dashboard() { // Remove { shop } from props
-  const router = useRouter(); // Initialize the router
-  const { shop } = router.query; // Get 'shop' from the URL query
+interface Product {
+  id: string;
+  title: string;
+  price: number;
+}
 
-  const [products, setProducts] = useState([]);
-  const [customers, setCustomers] = useState([]);
+interface Customer {
+  id: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+}
+
+export default function Dashboard() {
+  const router = useRouter();
+  const { shop } = router.query;
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [billingUrl, setBillingUrl] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Check if shop is available in the URL query
     if (!shop) return;
 
     async function fetchData() {
-      // ... (rest of the logic remains the same) ...
       try {
-        const p = await axios.get(`/api/products?shop=${shop}`);
+        const p = await axios.get<Product[]>(`/api/products?shop=${shop}`);
         setProducts(p.data);
-        const c = await axios.get(`/api/customers?shop=${shop}`);
+
+        const c = await axios.get<Customer[]>(`/api/customers?shop=${shop}`);
         setCustomers(c.data);
       } catch (err) {
         console.error(err);
         setError("Failed to load data");
       }
     }
+
     fetchData();
-  }, [shop]); // Add shop to the dependency array
+  }, [shop]);
 
   const handleBilling = async () => {
-    // ... (rest of the logic remains the same) ...
+    try {
+      const res = await axios.post<{ url: string }>(
+        `/api/billing?shop=${shop}`
+      );
+      setBillingUrl(res.data.url);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to create billing session");
+    }
   };
 
   const productRows = products.map((p) => [p.id, p.title]);
   const customerRows = customers.map((c) => [
     c.id,
-    `${c.firstName} ${c.lastName}`,
+    `${c.firstname} ${c.lastname}`,
     c.email,
   ]);
 
   return (
     <Page title="Shopify Dashboard">
       <Layout>
-        {error && <Banner title={error} status="critical" />}
+        {error && (
+          <Layout.Section>
+            <Banner tone="critical">
+              <Text as="p">{error}</Text>
+            </Banner>
+          </Layout.Section>
+        )}
+
         <Layout.Section>
-          <Card title="Products" sectioned>
+          <Card>
             <DataTable
               columnContentTypes={["text", "text"]}
               headings={["ID", "Title"]}
@@ -62,8 +92,9 @@ export default function Dashboard() { // Remove { shop } from props
             />
           </Card>
         </Layout.Section>
+
         <Layout.Section>
-          <Card title="Customers" sectioned>
+          <Card>
             <DataTable
               columnContentTypes={["text", "text", "text"]}
               headings={["ID", "Name", "Email"]}
@@ -71,16 +102,24 @@ export default function Dashboard() { // Remove { shop } from props
             />
           </Card>
         </Layout.Section>
+
         <Layout.Section>
-          <Card title="Billing" sectioned>
-            <Button onClick={handleBilling}>Create / Confirm Billing</Button>
-            {billingUrl && (
-              <Banner title="Billing Confirmation" status="success">
-                <a href={billingUrl} target="_blank" rel="noreferrer">
-                  Go to Shopify Billing
-                </a>
-              </Banner>
-            )}
+          <Card>
+            <BlockStack gap="200">
+              <Button variant="primary" onClick={handleBilling}>
+                Create / Confirm Billing
+              </Button>
+
+              {billingUrl && (
+                <Banner>
+                  <Text as="p">
+                    <a href={billingUrl} target="_blank" rel="noreferrer">
+                      Go to Shopify Billing
+                    </a>
+                  </Text>
+                </Banner>
+              )}
+            </BlockStack>
           </Card>
         </Layout.Section>
       </Layout>

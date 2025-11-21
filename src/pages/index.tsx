@@ -1,51 +1,77 @@
 import { useState } from 'react';
-import { Page, Card, FormLayout, TextField, Button, Link, Layout } from '@shopify/polaris';
+import {
+  Page,
+  Card,
+  TextField,
+  Button,
+  Link,
+  Layout,
+  BlockStack,
+  InlineStack,
+  Text,
+  Banner,
+} from '@shopify/polaris';
 import { useRouter } from 'next/router';
 
 export default function IndexPage() {
   const [shopName, setShopName] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
 
-  // Handle installation click
   const handleInstallClick = () => {
-    if (shopName) {
-      // Redirect to the Next.js API route that handles OAuth
-      router.push(`/api/auth?shop=${shopName}`);
-    } else {
-      alert("Please enter your Shopify store name.");
+    if (!shopName) {
+      setError('Please enter your Shopify store name.');
+      return;
     }
+
+    setError('');
+    router.push(`/api/auth?shop=${shopName}`);
   };
 
   return (
     <Page title="Welcome to the Shopify App">
       <Layout>
         <Layout.Section>
-          <Card sectioned title="Install Your App">
-            <p>Enter your store URL to begin the installation process.</p>
-            <FormLayout>
-              <TextField
-                label="Shopify Store URL"
-                value={shopName}
-                onChange={setShopName}
-                placeholder="your-store-name.myshopify.com"
-                connectedRight={
-                  <Button primary onClick={handleInstallClick}>
-                    Install App
-                  </Button>
-                }
-              />
-            </FormLayout>
+          {error && (
+            <Banner tone="critical">
+              <Text as="p">{error}</Text>
+            </Banner>
+          )}
+
+          <Card>
+            <BlockStack gap="300">
+              <Text as="h2" variant="headingMd">
+                Install Your App
+              </Text>
+
+              <Text as="p">
+                Enter your store URL to begin the installation process.
+              </Text>
+
+              <InlineStack gap="200">
+                <TextField
+                  label="Shopify Store URL"
+                  value={shopName}
+                  onChange={setShopName}
+                  placeholder="example.myshopify.com"
+                  autoComplete="off"
+                />
+
+                <Button variant="primary" onClick={handleInstallClick}>
+                  Install App
+                </Button>
+              </InlineStack>
+            </BlockStack>
           </Card>
         </Layout.Section>
+
         <Layout.Section>
-          {/* Example link for quick testing, replace with a valid shop URL */}
-          <p>
-            Alternatively, test with a hardcoded link:
-            <br />
+          <BlockStack gap="200">
+            <Text as="p">Alternatively, test with a hardcoded link:</Text>
             <Link url="/api/auth?shop=new-dev-store-12324471.myshopify.com">
               Install App for example store
             </Link>
-          </p>
+          </BlockStack>
         </Layout.Section>
       </Layout>
     </Page>
