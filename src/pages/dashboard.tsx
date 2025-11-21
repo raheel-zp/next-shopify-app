@@ -30,7 +30,7 @@ export default function Dashboard() {
   const { shop } = router.query;
 
   const [products, setProducts] = useState<Product[]>([]);
-  const [customers, setCustomers] = useState<Customer[]>([]);
+  //const [customers, setCustomers] = useState<Customer[]>([]);
   const [billingUrl, setBillingUrl] = useState("");
   const [error, setError] = useState("");
 
@@ -42,8 +42,8 @@ export default function Dashboard() {
         const p = await axios.get<Product[]>(`/api/products?shop=${shop}`);
         setProducts(p.data);
 
-        const c = await axios.get<Customer[]>(`/api/customers?shop=${shop}`);
-        setCustomers(c.data);
+        // const c = await axios.get<Customer[]>(`/api/customers?shop=${shop}`);
+        // setCustomers(c.data);
       } catch (err) {
         console.error(err);
         setError("Failed to load data");
@@ -66,11 +66,11 @@ export default function Dashboard() {
   };
 
   const productRows = products.map((p) => [p.id, p.title]);
-  const customerRows = customers.map((c) => [
-    c.id,
-    `${c.firstName} ${c.lastName}`,
-    c.email,
-  ]);
+  // const customerRows = customers.map((c) => [
+  //   c.id,
+  //   `${c.firstName} ${c.lastName}`,
+  //   c.email,
+  // ]);
 
   return (
     <Page title="Shopify Dashboard">
@@ -93,7 +93,7 @@ export default function Dashboard() {
           </Card>
         </Layout.Section>
 
-        <Layout.Section>
+        {/* <Layout.Section>
           <Card>
             <DataTable
               columnContentTypes={["text", "text", "text"]}
@@ -101,7 +101,7 @@ export default function Dashboard() {
               rows={customerRows}
             />
           </Card>
-        </Layout.Section>
+        </Layout.Section> */}
 
         <Layout.Section>
           <Card>
