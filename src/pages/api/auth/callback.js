@@ -1,6 +1,6 @@
 // pages/api/auth/callback.js
 import axios from "axios";
-
+import clientPromise from "../../../lib/mongodb";
 // In-memory store (Still needs DB for production)
 let ACTIVE_SHOP_TOKENS = {};
 
@@ -20,8 +20,16 @@ export default async function handler(req, res) {
       code,
     });
 
-    // In a real app, save this token to a secure database
-    ACTIVE_SHOP_TOKENS[shop] = data.access_token;
+    const client = await clientPromise;
+    const db = client.db("shopify_app"); // Your DB name
+    const collection = db.collection("shops");
+
+    // Upsert shop and token
+    await collection.updateOne(
+      { shopDomain: shop },
+      { $set: { accessToken: data.access_token, updatedAt: new Date() } },
+      { upsert: true }
+    );
 
     // Redirect to a frontend page (e.g., /dashboard page in Next.js)
     res.redirect(`/dashboard?shop=${shop}`);

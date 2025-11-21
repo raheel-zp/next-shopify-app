@@ -1,6 +1,6 @@
 // pages/api/dashboard.js
 import axios from "axios";
-
+import clientPromise from "../../lib/mongodb";
 // Assume ACTIVE_SHOP_TOKENS is imported or available via a database/cache layer
 
 export default async function handler(req, res) {
