@@ -20,8 +20,8 @@ interface Product {
 
 interface Customer {
   id: string;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   email: string;
 }
 
@@ -68,7 +68,7 @@ export default function Dashboard() {
   const productRows = products.map((p) => [p.id, p.title]);
   const customerRows = customers.map((c) => [
     c.id,
-    `${c.firstname} ${c.lastname}`,
+    `${c.firstName} ${c.lastName}`,
     c.email,
   ]);
 

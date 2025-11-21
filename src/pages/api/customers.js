@@ -1,7 +1,6 @@
 // pages/api/dashboard.js
 import axios from "axios";
-
-// Assume ACTIVE_SHOP_TOKENS is imported or available via a database/cache layer
+import clientPromise from "../../lib/mongodb";
 
 export default async function handler(req, res) {
   const { shop } = req.query;
@@ -15,11 +14,9 @@ export default async function handler(req, res) {
   const accessToken = shopData.accessToken;
 
   if (!accessToken) {
-    // In a Next.js app, you'd handle this by redirecting client-side to an auth page
     return res.status(401).json({ error: "Unauthorized or token missing" });
   }
 
-  // Fetch products logic...
   const customersQuery = `{
   customers(first: 5) {
     edges {
@@ -33,7 +30,7 @@ export default async function handler(req, res) {
   }
 }`;
   const customersResp = await axios.post(
-    `https://${shop}/admin/api/2023-10/graphql.json`,
+    `https://${shop}/admin/api/2025-10/graphql.json`,
     { query: customersQuery },
     { headers: { "X-Shopify-Access-Token": accessToken } }
   );
