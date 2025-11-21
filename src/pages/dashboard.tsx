@@ -21,12 +21,13 @@ interface Product {
 
 export default function Dashboard() {
   const router = useRouter();
-  const { shop } = router.query;
+  const { shop, charge_id } = router.query;
 
   const [products, setProducts] = useState<Product[]>([]);
   //const [customers, setCustomers] = useState<Customer[]>([]);
   const [billingUrl, setBillingUrl] = useState("");
   const [error, setError] = useState("");
+  const [billingActive, setBillingActive] = useState(false);
 
   useEffect(() => {
     if (!shop) return;
@@ -35,6 +36,9 @@ export default function Dashboard() {
       try {
         const p = await axios.get<Product[]>(`/api/products?shop=${shop}`);
         setProducts(p.data || []);
+
+        const b = await axios.get<{ status: boolean }>(`/api/billingStatus?shop=${shop}`);
+        setBillingActive(b.data.status);
 
         // const c = await axios.get<Customer[]>(`/api/customers?shop=${shop}`);
         // setCustomers(c.data);
@@ -46,6 +50,23 @@ export default function Dashboard() {
 
     fetchData();
   }, [shop]);
+
+  useEffect(() => {
+    if (!charge_id) return;
+
+    async function confirmBilling() {
+      try {
+        await axios.post(`/api/billing/confirm`, { shop, charge_id });
+        // Optional: remove charge_id from URL after confirming
+        router.replace(`/dashboard?shop=${shop}`, undefined, { shallow: true });
+      } catch (err) {
+        console.error("Failed to confirm billing", err);
+      }
+    }
+
+    confirmBilling();
+
+  }, []);
 
   const handleBilling = async () => {
     try {
@@ -100,9 +121,11 @@ export default function Dashboard() {
         <Layout.Section>
           <Card>
             <BlockStack gap="200">
-              <Button variant="primary" onClick={handleBilling}>
-                Create / Confirm Billing
-              </Button>
+              {!billingActive && (
+                <Button variant="primary" onClick={handleBilling}>
+                  Create / Confirm Billing
+                </Button>
+              )}
 
               {billingUrl && (
                 <Banner>
