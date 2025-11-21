@@ -20,13 +20,24 @@ export default async function handler(req, res) {
   }
 
   // Fetch products logic...
-  const productsQuery = `{ products(first: 5) { edges { node { id title } } } }`;
-  const productsResp = await axios.post(
+  const customersQuery = `{
+  customers(first: 5) {
+    edges {
+      node {
+        id
+        firstName
+        lastName
+        email
+      }
+    }
+  }
+}`;
+  const customersResp = await axios.post(
     `https://${shop}/admin/api/2023-10/graphql.json`,
-    { query: productsQuery },
+    { query: customersQuery },
     { headers: { "X-Shopify-Access-Token": accessToken } }
   );
-  const products = productsResp.data.data.products.edges.map((e) => e.node);
+  const customers = customersResp.data.data.customers.edges.map((e) => e.node);
 
-  res.status(200).json({ products });
+  res.status(200).json({ customers });
 }
