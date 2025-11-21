@@ -18,12 +18,6 @@ interface Product {
   price: number;
 }
 
-interface Customer {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-}
 
 export default function Dashboard() {
   const router = useRouter();
@@ -40,7 +34,7 @@ export default function Dashboard() {
     async function fetchData() {
       try {
         const p = await axios.get<Product[]>(`/api/products?shop=${shop}`);
-        setProducts(p.data);
+        setProducts(p.data.products);
 
         // const c = await axios.get<Customer[]>(`/api/customers?shop=${shop}`);
         // setCustomers(c.data);
@@ -65,7 +59,7 @@ export default function Dashboard() {
     }
   };
 
-  const productRows = products.map((p) => [p.id, p.title]);
+  const productRows = products?.map((p) => [p.id, p.title]);
   // const customerRows = customers.map((c) => [
   //   c.id,
   //   `${c.firstName} ${c.lastName}`,
