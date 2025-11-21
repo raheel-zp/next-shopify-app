@@ -69,7 +69,7 @@ export default function Dashboard() {
 
     confirmBilling();
 
-  }, []);
+  }, [charge_id, router, shop]);
 
   const handleBilling = async () => {
     try {
