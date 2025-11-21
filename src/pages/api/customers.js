@@ -42,9 +42,7 @@ export default async function handler(req, res) {
       }
     );
 
-    const customers = response.data.data.customers.edges.map(
-      (e: any) => e.node
-    );
+    const customers = response.data.data.customers.edges.map((e) => e.node);
     res.status(200).json({ customers });
   } catch (err) {
     console.error(err.response?.data || err.message);
