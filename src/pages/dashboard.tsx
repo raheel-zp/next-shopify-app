@@ -121,27 +121,28 @@ export default function Dashboard() {
           </Card>
         </Layout.Section> */}
 
-        <Layout.Section>
-          <Card>
-            <BlockStack gap="200">
-              {!billingActive && (
+        {!billingActive && (
+          <Layout.Section>
+            <Card>
+              <BlockStack gap="200">
+
                 <Button variant="primary" onClick={handleBilling}>
                   Create / Confirm Billing
                 </Button>
-              )}
 
-              {billingUrl && (
-                <Banner>
-                  <Text as="p">
-                    <a href={billingUrl} target="_blank" rel="noreferrer">
-                      Go to Shopify Billing
-                    </a>
-                  </Text>
-                </Banner>
-              )}
-            </BlockStack>
-          </Card>
-        </Layout.Section>
+                {billingUrl && (
+                  <Banner>
+                    <Text as="p">
+                      <a href={billingUrl} target="_blank" rel="noreferrer">
+                        Go to Shopify Billing
+                      </a>
+                    </Text>
+                  </Banner>
+                )}
+              </BlockStack>
+            </Card>
+          </Layout.Section>
+        )}
       </Layout>
     </Page>
   );
