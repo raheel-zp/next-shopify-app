@@ -1,5 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { Redirect } from "@shopify/app-bridge/actions";
+import { useAppBridge } from "@shopify/app-bridge-react";
 import {
     Page,
     Layout,
@@ -8,6 +10,7 @@ import {
     Spinner,
     Banner,
     BlockStack,
+    Button,
 } from "@shopify/polaris";
 import axios from "axios";
 
@@ -24,6 +27,7 @@ interface Customer {
 }
 
 export default function CustomerDetail() {
+    const shopify = useAppBridge();
     const router = useRouter();
     const { id, shop } = router.query;
 
@@ -48,6 +52,14 @@ export default function CustomerDetail() {
 
         fetchCustomer();
     }, [id, shop]);
+
+    const handleEdit = () => {
+        const redirect = Redirect.create(shopify);
+        redirect.dispatch(
+            Redirect.Action.REMOTE,
+            `https://${shop}/admin/customers/${id}`
+        );
+    };
 
     if (loading) {
         return (
@@ -121,6 +133,19 @@ export default function CustomerDetail() {
                         </BlockStack>
                     </Card>
                 </Layout.Section>
+
+                <Layout.Section>
+                    <Card>
+                        <BlockStack gap="300">
+                            <Button
+                                onClick={() => handleEdit}
+                            >
+                                Edit product
+                            </Button>
+                        </BlockStack>
+                    </Card>
+                </Layout.Section>
+
 
             </Layout>
         </Page>
