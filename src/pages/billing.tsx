@@ -21,6 +21,7 @@ export default function Billing() {
     useEffect(() => {
         if (!shop) {
             router.push(`/`);
+            return;
         };
         async function checkBilling() {
             try {
