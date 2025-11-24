@@ -26,11 +26,7 @@ export default function Billing() {
                 if (b.data.status) {
                     router.push(`/dashboard?shop=${shop}`);
                 }
-                else {
-                    if (shop) {
-                        router.push(`/billing?shop=${shop}`);
-                    }
-                }
+
             }
             catch (err) {
                 console.error(err);
