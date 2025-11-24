@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   const collection = db.collection("shops");
 
   const shopData = await collection.findOne({ shopDomain: shop });
-  if (!shopData) return res.status(404).json({ error: "Shop not found" });
+  if (!shopData) return res.status(200).json({ status: false });
 
   const billingActive = shopData.billingActive || false;
 
