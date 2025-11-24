@@ -37,6 +37,8 @@ export default function Dashboard() {
         const b = await axios.get<{ status: boolean }>(`/api/billingStatus?shop=${shop}`);
         if (!b.data.status) {
           router.push(`/billing?shop=${shop}`);
+        }
+        else {
           setBillingActive(true);
         }
       } catch (err) {
