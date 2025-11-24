@@ -73,30 +73,6 @@ export default function Dashboard() {
     fetchData();
   }, [shop, router]);
 
-  useEffect(() => {
-    if (!charge_id) return;
-
-    async function confirmBilling() {
-      setLoading(true);
-      try {
-        const response = await axios.post(`/api/billing/confirm`, { shop, charge_id });
-        if (response.data.success) {
-          router.replace(`/dashboard?shop=${shop}`, undefined, { shallow: true });
-        }
-        else {
-          router.push(`/billing?shop=${shop}`);
-        }
-
-      } catch (err) {
-        console.error("Failed to confirm billing", err);
-      }
-      finally {
-        setLoading(false);
-      }
-    }
-    confirmBilling();
-  }, [charge_id, router, shop]);
-
   const productRows = products?.map((p) => [p.id, p.title]);
   // const customerRows = customers.map((c) => [
   //   c.id,

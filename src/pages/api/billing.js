@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     mutation {
       appSubscriptionCreate(
         name: "Basic Plan",
-        returnUrl: "${process.env.HOST}/dashboard?shop=${shop}",
+        returnUrl: "${process.env.HOST}/billing?shop=${shop}",
         test: true,
         lineItems: [{ plan: { appRecurringPricingDetails: { price: { amount: 5.0, currencyCode: USD } } } }]
       ) {
