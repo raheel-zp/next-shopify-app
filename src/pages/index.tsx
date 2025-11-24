@@ -114,7 +114,7 @@ export default function IndexPage() {
           <Layout.Section>
             <BlockStack gap="200">
 
-              <Link url="/dashboard?shop=${shop}">
+              <Link url={`/dashboard?shop=${shopName}`}>
                 View Dashboard
               </Link>
             </BlockStack>
