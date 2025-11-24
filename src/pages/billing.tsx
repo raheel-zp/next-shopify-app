@@ -27,7 +27,7 @@ export default function Billing() {
                     router.push(`/dashboard?shop=${shop}`);
                 }
                 else {
-                    if (shop != '') {
+                    if (shop) {
                         router.push(`/billing?shop=${shop}`);
                     }
                 }
