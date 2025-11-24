@@ -3,7 +3,6 @@ import {
     Page,
     Layout,
     Card,
-    DataTable,
     Banner,
     Button,
     BlockStack,
@@ -17,6 +16,30 @@ export default function Billing() {
     const { shop, charge_id } = router.query;
     const [error, setError] = useState("");
     const [billingActive, setBillingActive] = useState(false);
+
+    useEffect(() => {
+        if (charge_id) return;
+
+        async function checkBilling() {
+            try {
+                const b = await axios.get<{ status: boolean }>(`/api/billingStatus?shop=${shop}`);
+                if (b.data.status) {
+                    router.push(`/dashboard?shop=${shop}`);
+                }
+                else {
+                    if (shop != '') {
+                        router.push(`/billing?shop=${shop}`);
+                    }
+                }
+            }
+            catch (err) {
+                console.error(err);
+                setError("Failed to load data");
+            }
+        }
+        checkBilling();
+
+    }, [router, shop, charge_id]);
 
     useEffect(() => {
 

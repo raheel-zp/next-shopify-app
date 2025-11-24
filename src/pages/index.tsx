@@ -19,32 +19,6 @@ export default function IndexPage() {
   const [shopName, setShopName] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function checkBilling() {
-      try {
-        const b = await axios.get<{ status: boolean }>(`/api/billingStatus?shop=${shopName}`);
-        if (b.data.status) {
-          router.push(`/dashboard?shop=${shopName}`);
-        }
-        else {
-          if (shopName != '') {
-            router.push(`/billing?shop=${shopName}`);
-          }
-        }
-      }
-      catch (err) {
-        console.error(err);
-        setError("Failed to load data");
-      }
-      finally {
-        setLoading(false);
-      }
-    }
-    checkBilling();
-
-  }, [router, shopName]);
 
   const handleInstallClick = () => {
     if (!shopName) {
@@ -55,18 +29,6 @@ export default function IndexPage() {
     setError('');
     router.push(`/api/auth?shop=${shopName}`);
   };
-
-  if (loading) {
-    return (
-      <Page>
-        <Layout>
-          <Layout.Section>
-            <Spinner size="large" />
-          </Layout.Section>
-        </Layout>
-      </Page>
-    );
-  }
 
   return (
     <Page title="Welcome to the Shopify App">
