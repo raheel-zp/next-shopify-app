@@ -1,8 +1,6 @@
 // pages/api/auth/callback.js
 import axios from "axios";
 import clientPromise from "../../../lib/mongodb";
-// In-memory store (Still needs DB for production)
-let ACTIVE_SHOP_TOKENS = {};
 
 export default async function handler(req, res) {
   const { shop, code } = req.query;
