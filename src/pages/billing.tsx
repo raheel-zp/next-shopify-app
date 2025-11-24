@@ -19,14 +19,12 @@ export default function Billing() {
 
     useEffect(() => {
         if (charge_id) return;
-
         async function checkBilling() {
             try {
                 const b = await axios.get<{ status: boolean }>(`/api/billingStatus?shop=${shop}`);
                 if (b.data.status) {
                     router.push(`/dashboard?shop=${shop}`);
                 }
-
             }
             catch (err) {
                 console.error(err);
@@ -34,11 +32,9 @@ export default function Billing() {
             }
         }
         checkBilling();
-
     }, [router, shop, charge_id]);
 
     useEffect(() => {
-
         if (!charge_id) return;
         async function confirmBilling() {
             try {
