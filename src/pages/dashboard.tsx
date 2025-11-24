@@ -29,6 +29,7 @@ export default function Dashboard() {
   const [billingActive, setBillingActive] = useState(false);
 
   useEffect(() => {
+    if (!router.isReady) return;
     if (!shop) {
       router.push(`/`);
       return;

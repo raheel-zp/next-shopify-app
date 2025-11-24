@@ -19,6 +19,7 @@ export default function Billing() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        if (!router.isReady) return;
         if (!shop) {
             router.push(`/`);
             return;
