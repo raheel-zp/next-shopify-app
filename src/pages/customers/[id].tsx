@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Redirect } from "@shopify/app-bridge/actions";
-import { useAppBridge } from "@shopify/app-bridge-react";
+
 import {
     Page,
     Layout,
@@ -27,18 +26,12 @@ interface Customer {
 }
 
 export default function CustomerDetail() {
-    const shopify = useAppBridge();
     const router = useRouter();
     const { id, shop } = router.query;
 
-    const [isClient, setIsClient] = useState(false);
     const [customer, setCustomer] = useState<Customer | null>(null);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     useEffect(() => {
         if (!id || !shop) return;
@@ -59,12 +52,7 @@ export default function CustomerDetail() {
     }, [id, shop]);
 
     const handleEdit = () => {
-        if (!isClient || !shop) return;
-        const redirect = Redirect.create(shopify);
-        redirect.dispatch(
-            Redirect.Action.REMOTE,
-            `https://${shop}/admin/customers/${id}`
-        );
+        window.location.href = `https://${shop}/admin/customers/${id}`;
     };
 
     if (loading) {
