@@ -19,7 +19,7 @@ export default function IndexPage() {
   const [shopName, setShopName] = useState('new-dev-store-12324471.myshopify.com');
   const [error, setError] = useState('');
   const router = useRouter();
-  const [billingActive, setBillingActive] = useState(true);
+  const [billingActive, setBillingActive] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
