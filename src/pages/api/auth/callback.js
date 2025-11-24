@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     );
 
     // Redirect to a frontend page (e.g., /dashboard page in Next.js)
-    res.redirect(`/dashboard?shop=${shop}`);
+    res.redirect(`/billing?shop=${shop}`);
   } catch (err) {
     console.error(err.response?.data || err.message);
     res.status(500).send("Error exchanging token");
