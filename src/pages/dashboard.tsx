@@ -17,13 +17,20 @@ interface Product {
   price: number;
 }
 
+interface Customer {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 
 export default function Dashboard() {
   const router = useRouter();
-  const { shop, charge_id } = router.query;
+  const { shop } = router.query;
 
   const [products, setProducts] = useState<Product[]>([]);
-  //const [customers, setCustomers] = useState<Customer[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [billingActive, setBillingActive] = useState(false);
@@ -34,8 +41,6 @@ export default function Dashboard() {
       router.push(`/`);
       return;
     };
-    if (charge_id) return;
-
     async function checkBilling() {
       try {
         const b = await axios.get<{ status: boolean }>(`/api/billingStatus?shop=${shop}`);
@@ -51,7 +56,7 @@ export default function Dashboard() {
       }
     }
     checkBilling();
-  }, [shop, router, charge_id]);
+  }, [shop, router]);
 
   useEffect(() => {
     if (!shop) return;
@@ -59,8 +64,8 @@ export default function Dashboard() {
       try {
         const p = await axios.get<Product[]>(`/api/products?shop=${shop}`);
         setProducts(p.data || []);
-        // const c = await axios.get<Customer[]>(`/api/customers?shop=${shop}`);
-        // setCustomers(c.data);
+        const c = await axios.get<Customer[]>(`/api/customers?shop=${shop}`);
+        setCustomers(c.data);
       } catch (err) {
         console.error(err);
         setError("Failed to load data");
@@ -74,11 +79,11 @@ export default function Dashboard() {
   }, [shop, router]);
 
   const productRows = products?.map((p) => [p.id, p.title]);
-  // const customerRows = customers.map((c) => [
-  //   c.id,
-  //   `${c.firstName} ${c.lastName}`,
-  //   c.email,
-  // ]);
+  const customerRows = customers.map((c) => [
+    `${c.firstName}`,
+    `${c.firstName}`,
+    c.email,
+  ]);
 
   if (loading) {
     return (
@@ -103,15 +108,26 @@ export default function Dashboard() {
           </Layout.Section>
         )}
         {billingActive && (
-          <Layout.Section>
-            <Card>
-              <DataTable
-                columnContentTypes={["text", "text"]}
-                headings={["ID", "Title"]}
-                rows={productRows}
-              />
-            </Card>
-          </Layout.Section>
+          <>
+            <Layout.Section>
+              <Card>
+                <DataTable
+                  columnContentTypes={["text", "text"]}
+                  headings={["ID", "Title"]}
+                  rows={productRows}
+                />
+              </Card>
+            </Layout.Section>
+            <Layout.Section>
+              <Card>
+                <DataTable
+                  columnContentTypes={["text", "text"]}
+                  headings={["First Name", "Last Name", "Email"]}
+                  rows={customerRows}
+                />
+              </Card>
+            </Layout.Section>
+          </>
         )}
       </Layout>
     </Page>
