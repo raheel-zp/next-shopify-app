@@ -1,4 +1,3 @@
-// pages/api/customers.js
 import axios from "axios";
 import clientPromise from "../../lib/mongodb";
 
@@ -18,18 +17,20 @@ export default async function handler(req, res) {
     if (!accessToken)
       return res.status(401).json({ error: "Unauthorized or token missing" });
 
-    const customersQuery = `{
-      customers(first: 5) {
-        edges {
-          node {
-            id
-            firstName
-            lastName
-            email
+    const customersQuery = `
+      {
+        customers(first: 5) {
+          edges {
+            node {
+              id
+              firstName
+              lastName
+              email
+            }
           }
         }
       }
-    }`;
+    `;
 
     const response = await axios.post(
       `https://${shop}/admin/api/2024-10/graphql.json`,
@@ -41,6 +42,12 @@ export default async function handler(req, res) {
         },
       }
     );
+
+    if (response.data.errors) {
+      // Log and return the GraphQL errors
+      console.error(response.data.errors);
+      return res.status(500).json({ error: response.data.errors });
+    }
 
     const customers = response.data.data.customers.edges.map((e) => e.node);
     res.status(200).json(customers);
