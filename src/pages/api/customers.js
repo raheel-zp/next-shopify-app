@@ -32,7 +32,7 @@ export default async function handler(req, res) {
     }`;
 
     const response = await axios.post(
-      `https://${shop}/admin/api/2025-10/graphql.json`,
+      `https://${shop}/admin/api/2024-10/graphql.json`,
       { query: customersQuery },
       {
         headers: {
