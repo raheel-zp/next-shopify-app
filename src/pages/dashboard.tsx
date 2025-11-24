@@ -40,22 +40,20 @@ export default function Dashboard() {
         console.error(err);
         setError("Failed to load data");
       }
-      finally {
-        setLoading(false);
-      }
     }
     checkBilling();
   }, [shop, router]);
 
   useEffect(() => {
     if (!shop) return;
-
     async function fetchData() {
+      setLoading(true);
       try {
         const p = await axios.get<Product[]>(`/api/products?shop=${shop}`);
         setProducts(p.data || []);
         // const c = await axios.get<Customer[]>(`/api/customers?shop=${shop}`);
         // setCustomers(c.data);
+        setLoading(false);
 
       } catch (err) {
         console.error(err);
@@ -70,9 +68,11 @@ export default function Dashboard() {
     if (!charge_id) return;
 
     async function confirmBilling() {
+      setLoading(true);
       try {
         const response = await axios.post(`/api/billing/confirm`, { shop, charge_id });
         if (response.data.success) {
+          setLoading(false);
           router.replace(`/dashboard?shop=${shop}`, undefined, { shallow: true });
         }
         else {
