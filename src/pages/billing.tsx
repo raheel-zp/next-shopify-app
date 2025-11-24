@@ -66,7 +66,7 @@ export default function Billing() {
     };
 
     return (
-        <Page title="Shopify Dashboard">
+        <Page title="Approve Billing">
             <Layout>
                 {error && (
                     <Layout.Section>

@@ -26,6 +26,7 @@ export default function Dashboard() {
   //const [customers, setCustomers] = useState<Customer[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [billingActive, setBillingActive] = useState(false);
 
   useEffect(() => {
     if (!shop) return;
@@ -35,6 +36,7 @@ export default function Dashboard() {
         const b = await axios.get<{ status: boolean }>(`/api/billingStatus?shop=${shop}`);
         if (!b.data.status) {
           router.push(`/billing?shop=${shop}`);
+          setBillingActive(true);
         }
       } catch (err) {
         console.error(err);
@@ -47,7 +49,6 @@ export default function Dashboard() {
   useEffect(() => {
     if (!shop) return;
     async function fetchData() {
-      setLoading(true);
       try {
         const p = await axios.get<Product[]>(`/api/products?shop=${shop}`);
         setProducts(p.data || []);
@@ -63,28 +64,6 @@ export default function Dashboard() {
 
     fetchData();
   }, [shop, router]);
-
-  useEffect(() => {
-    if (!charge_id) return;
-
-    async function confirmBilling() {
-      setLoading(true);
-      try {
-        const response = await axios.post(`/api/billing/confirm`, { shop, charge_id });
-        if (response.data.success) {
-          setLoading(false);
-          router.replace(`/dashboard?shop=${shop}`, undefined, { shallow: true });
-        }
-        else {
-          router.push(`/billing?shop=${shop}`);
-        }
-
-      } catch (err) {
-        console.error("Failed to confirm billing", err);
-      }
-    }
-    confirmBilling();
-  }, [charge_id, router, shop]);
 
   const productRows = products?.map((p) => [p.id, p.title]);
   // const customerRows = customers.map((c) => [
@@ -115,26 +94,17 @@ export default function Dashboard() {
             </Banner>
           </Layout.Section>
         )}
-
-        <Layout.Section>
-          <Card>
-            <DataTable
-              columnContentTypes={["text", "text"]}
-              headings={["ID", "Title"]}
-              rows={productRows}
-            />
-          </Card>
-        </Layout.Section>
-
-        {/* <Layout.Section>
-          <Card>
-            <DataTable
-              columnContentTypes={["text", "text", "text"]}
-              headings={["ID", "Name", "Email"]}
-              rows={customerRows}
-            />
-          </Card>
-        </Layout.Section> */}
+        {billingActive && (
+          <Layout.Section>
+            <Card>
+              <DataTable
+                columnContentTypes={["text", "text"]}
+                headings={["ID", "Title"]}
+                rows={productRows}
+              />
+            </Card>
+          </Layout.Section>
+        )}
       </Layout>
     </Page>
   );
