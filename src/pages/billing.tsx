@@ -19,7 +19,9 @@ export default function Billing() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!shop) return;
+        if (!shop) {
+            router.push(`/`);
+        };
         async function checkBilling() {
             try {
                 const b = await axios.get<{ status: boolean }>(`/api/billingStatus?shop=${shop}`);

@@ -29,7 +29,9 @@ export default function Dashboard() {
   const [billingActive, setBillingActive] = useState(false);
 
   useEffect(() => {
-    if (!shop) return;
+    if (!shop) {
+      router.push(`/`);
+    };
     if (charge_id) return;
 
     async function checkBilling() {
