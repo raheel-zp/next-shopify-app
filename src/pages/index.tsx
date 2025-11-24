@@ -10,9 +10,7 @@ import {
   InlineStack,
   Text,
   Banner,
-  Spinner
 } from '@shopify/polaris';
-import axios from "axios";
 import { useRouter } from "next/router";
 
 export default function IndexPage() {

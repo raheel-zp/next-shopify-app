@@ -13,17 +13,20 @@ import { useRouter } from "next/router";
 
 export default function Billing() {
     const router = useRouter();
-    const { shop, charge_id } = router.query;
+    const { shop } = router.query;
     const [error, setError] = useState("");
-    const [billingActive, setBillingActive] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (charge_id) return;
+        if (!shop) return;
         async function checkBilling() {
             try {
                 const b = await axios.get<{ status: boolean }>(`/api/billingStatus?shop=${shop}`);
                 if (b.data.status) {
                     router.push(`/dashboard?shop=${shop}`);
+                }
+                else {
+                    setLoading(false);
                 }
             }
             catch (err) {
@@ -32,7 +35,7 @@ export default function Billing() {
             }
         }
         checkBilling();
-    }, [router, shop, charge_id]);
+    }, [router, shop]);
 
     const handleBilling = async () => {
         try {
@@ -57,7 +60,7 @@ export default function Billing() {
                     </Layout.Section>
                 )}
 
-                {!billingActive && (
+                {!loading && (
                     <Layout.Section>
                         <Card>
                             <BlockStack gap="200">
