@@ -10,6 +10,7 @@ import {
   InlineStack,
   Text,
   Banner,
+  Spinner
 } from '@shopify/polaris';
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -18,7 +19,8 @@ export default function IndexPage() {
   const [shopName, setShopName] = useState('new-dev-store-12324471.myshopify.com');
   const [error, setError] = useState('');
   const router = useRouter();
-  const [billingActive, setBillingActive] = useState(false);
+  const [billingActive, setBillingActive] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function checkBilling() {
@@ -29,6 +31,9 @@ export default function IndexPage() {
       catch (err) {
         console.error(err);
         setError("Failed to load data");
+      }
+      finally {
+        setLoading(false);   // <-- done loading
       }
     }
     checkBilling();
@@ -44,6 +49,18 @@ export default function IndexPage() {
     setError('');
     router.push(`/api/auth?shop=${shopName}`);
   };
+
+  if (loading) {
+    return (
+      <Page>
+        <Layout>
+          <Layout.Section>
+            <Spinner size="large" />
+          </Layout.Section>
+        </Layout>
+      </Page>
+    );
+  }
 
   return (
     <Page title="Welcome to the Shopify App">
