@@ -31,9 +31,14 @@ export default function CustomerDetail() {
     const router = useRouter();
     const { id, shop } = router.query;
 
+    const [isClient, setIsClient] = useState(false);
     const [customer, setCustomer] = useState<Customer | null>(null);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     useEffect(() => {
         if (!id || !shop) return;
@@ -54,6 +59,7 @@ export default function CustomerDetail() {
     }, [id, shop]);
 
     const handleEdit = () => {
+        if (!isClient || !shop) return;
         const redirect = Redirect.create(shopify);
         redirect.dispatch(
             Redirect.Action.REMOTE,
@@ -138,7 +144,7 @@ export default function CustomerDetail() {
                     <Card>
                         <BlockStack gap="300">
                             <Button
-                                onClick={() => handleEdit}
+                                onClick={handleEdit}
                             >
                                 Edit product
                             </Button>
