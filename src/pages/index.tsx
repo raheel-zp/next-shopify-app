@@ -34,7 +34,9 @@ export default function IndexPage() {
       }
       finally {
         setLoading(false);
-        router.push(`/dashboard?shop=${shopName}`);
+        if (billingActive) {
+          router.push(`/dashboard?shop=${shopName}`);
+        }
       }
     }
     checkBilling();
