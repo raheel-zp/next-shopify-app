@@ -7,9 +7,16 @@ import '@shopify/polaris/build/esm/styles.css';
 import enTranslations from '@shopify/polaris/locales/en.json';
 
 function MyApp({ Component, pageProps }: AppProps) {
+  let host = "";
+
+  if (typeof window !== "undefined") {
+    const params = new URLSearchParams(window.location.search);
+    host = params.get("host") || "";
+  }
+
   const config = {
     apiKey: process.env.NEXT_PUBLIC_SHOPIFY_API_KEY || "",
-    host: typeof window !== "undefined" ? window.location.hostname : "",
+    host,
     forceRedirect: true,
   };
   return (
