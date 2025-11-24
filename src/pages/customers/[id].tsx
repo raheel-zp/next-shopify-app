@@ -128,19 +128,6 @@ export default function CustomerDetail() {
                     </Card>
                 </Layout.Section>
 
-                <Layout.Section>
-                    <Card>
-                        <BlockStack gap="300">
-                            <Button
-                                onClick={handleEdit}
-                            >
-                                Edit product
-                            </Button>
-                        </BlockStack>
-                    </Card>
-                </Layout.Section>
-
-
             </Layout>
         </Page>
     );
