@@ -87,7 +87,7 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <Page>
+      <Page fullWidth>
         <Layout>
           <Layout.Section>
             <Spinner size="large" />
@@ -98,7 +98,7 @@ export default function Dashboard() {
   }
 
   return (
-    <Page title="Shopify Dashboard">
+    <Page title="Shopify Dashboard" fullWidth>
       <Layout>
         {error && (
           <Layout.Section>

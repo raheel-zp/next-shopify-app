@@ -29,7 +29,7 @@ export default function IndexPage() {
   };
 
   return (
-    <Page title="Welcome to the Shopify App">
+    <Page title="Dev Dashboard App" fullWidth>
       <Layout>
         <Layout.Section>
           {error && (

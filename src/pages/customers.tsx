@@ -86,7 +86,7 @@ export default function CustomersPage() {
     }
 
     return (
-        <Page title="Customers">
+        <Page title="Customers" fullWidth>
             <Layout>
                 {error && (
                     <Layout.Section>

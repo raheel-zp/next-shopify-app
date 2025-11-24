@@ -32,7 +32,7 @@ export default function ScopesPage() {
 
     if (!shop) {
         return (
-            <Page title="Scopes">
+            <Page title="Scopes" fullWidth>
                 <Banner tone="critical">
                     <Text as="p">Missing shop parameter in query</Text>
                 </Banner>
@@ -50,7 +50,7 @@ export default function ScopesPage() {
 
     if (error) {
         return (
-            <Page title="Scopes">
+            <Page title="Scopes" fullWidth>
                 <Banner tone="critical">
                     <Text as="p">{error}</Text>
                 </Banner>
@@ -59,7 +59,7 @@ export default function ScopesPage() {
     }
 
     return (
-        <Page title="Shopify Access Token Scopes">
+        <Page title="Shopify Access Token Scopes" fullWidth>
             <Card>
                 <Text as="p">Scopes for store: <strong>{shop}</strong></Text>
                 {scopes.length === 0 ? (
