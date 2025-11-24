@@ -10,6 +10,7 @@ import {
 } from "@shopify/polaris";
 import axios from "axios";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 interface Customer {
     id: string;
@@ -47,7 +48,7 @@ export default function CustomersPage() {
         }
 
         checkBilling();
-    }, [shop]);
+    }, [shop, router]);
 
     useEffect(() => {
         if (!shop) return;
@@ -67,11 +68,17 @@ export default function CustomersPage() {
         fetchCustomers();
     }, [shop]);
 
-    const rows = customers.map((c) => [
-        c.id.replace("gid://shopify/Customer/", ""),
-        `${c.firstName || ""} ${c.lastName || ""}`,
-        c.email,
-    ]);
+    const rows = customers.map((c) => {
+        const customerId = c.id.replace("gid://shopify/Customer/", "");
+
+        return [
+            customerId,
+            <Link key={customerId} href={`/customers/${customerId}?shop=${shop}`}>
+                {c.firstName} {c.lastName}
+            </Link>,
+            c.email,
+        ];
+    });
 
     if (loading) {
         return (
