@@ -31,6 +31,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (!shop) {
       router.push(`/`);
+      return;
     };
     if (charge_id) return;
 

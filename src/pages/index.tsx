@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Page,
   Card,
@@ -57,7 +57,7 @@ export default function IndexPage() {
                   autoComplete="off"
                 />
 
-                <Button variant="primary" onClick={handleInstallClick}>
+                <Button variant="primary" onClick={() => handleInstallClick()}>
                   Install App
                 </Button>
               </InlineStack>
