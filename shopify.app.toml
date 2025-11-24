@@ -1,0 +1,27 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "4f4d9550117e02d4e8e1ce2fb6273fee"
+name = "Dev Dasahboard App"
+application_url = "https://next-shopify-app-mu.vercel.app/"
+embedded = false
+
+[build]
+automatically_update_urls_on_dev = true
+include_config_on_deploy = true
+
+[webhooks]
+api_version = "2025-10"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks/app/uninstalled"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/scopes_update" ]
+  uri = "/webhooks/app/scopes_update"
+
+[access_scopes]
+scopes = "read_customers,write_customers,read_products,write_products"
+
+[auth]
+redirect_urls = [ "https://next-shopify-app-mu.vercel.app/api/auth/callback" ]

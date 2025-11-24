@@ -3,7 +3,10 @@ import clientPromise from "../../lib/mongodb";
 
 export default async function handler(req, res) {
   const { shop } = req.query;
-  if (!shop) return res.status(400).json({ error: "Shop is required" });
+
+  if (!shop) {
+    return res.status(400).json({ error: "Shop is required" });
+  }
 
   try {
     const client = await clientPromise;
@@ -11,15 +14,16 @@ export default async function handler(req, res) {
     const collection = db.collection("shops");
 
     const shopData = await collection.findOne({ shopDomain: shop });
-    if (!shopData) return res.status(404).json({ error: "Shop not found" });
+
+    if (!shopData) {
+      return res.status(404).json({ error: "Shop not found" });
+    }
 
     const accessToken = shopData.accessToken;
-    if (!accessToken)
-      return res.status(401).json({ error: "Unauthorized or token missing" });
 
     const customersQuery = `
       {
-        customers(first: 5) {
+        customers(first: 20) {
           edges {
             node {
               id
@@ -32,8 +36,8 @@ export default async function handler(req, res) {
       }
     `;
 
-    const response = await axios.post(
-      `https://${shop}/admin/api/2024-10/graphql.json`,
+    const result = await axios.post(
+      `https://${shop}/admin/api/2025-01/graphql.json`,
       { query: customersQuery },
       {
         headers: {
@@ -43,16 +47,16 @@ export default async function handler(req, res) {
       }
     );
 
-    if (response.data.errors) {
-      // Log and return the GraphQL errors
-      console.error(response.data.errors);
-      return res.status(500).json({ error: response.data.errors });
+    if (result.data.errors) {
+      console.log("GraphQL errors:", result.data.errors);
     }
 
-    const customers = response.data.data.customers.edges.map((e) => e.node);
+    const customers =
+      result.data.data?.customers?.edges?.map((e) => e.node) || [];
+
     res.status(200).json(customers);
   } catch (err) {
-    console.error(err.response?.data || err.message);
+    console.error("Shopify error:", err?.response?.data || err.message);
     res.status(500).json({ error: "Failed to fetch customers" });
   }
 }
