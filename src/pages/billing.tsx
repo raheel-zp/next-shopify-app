@@ -34,25 +34,6 @@ export default function Billing() {
         checkBilling();
     }, [router, shop, charge_id]);
 
-    useEffect(() => {
-        if (!charge_id) return;
-        async function confirmBilling() {
-            try {
-                const response = await axios.post(`/api/billing/confirm`, { shop, charge_id });
-                if (response.data.success) {
-                    setBillingActive(true);
-                    router.push(`/dashboard?shop=${shop}`);
-                }
-
-            } catch (err) {
-                console.error("Failed to confirm billing", err);
-            }
-        }
-
-        confirmBilling();
-
-    }, [charge_id, router, shop]);
-
     const handleBilling = async () => {
         try {
             const res = await axios.post<{ url: string }>(
