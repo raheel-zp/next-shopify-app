@@ -32,10 +32,10 @@ export default async function handler(req, res) {
         }
       }
     `;
-
+    const customerId = "gid://shopify/Customer/".id;
     const result = await axios.post(
       `https://${shop}/admin/api/2025-01/graphql.json`,
-      { query, variables: { id } },
+      { query, variables: { customerId } },
       {
         headers: {
           "X-Shopify-Access-Token": accessToken,
