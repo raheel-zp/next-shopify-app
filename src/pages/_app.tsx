@@ -8,7 +8,7 @@ import enTranslations from '@shopify/polaris/locales/en.json';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const config = {
-    apiKey: process.env.SHOPIFY_API_KEY || "",
+    apiKey: process.env.NEXT_PUBLIC_SHOPIFY_API_KEY || "",
     host: typeof window !== "undefined" ? window.location.hostname : "",
     forceRedirect: true,
   };
