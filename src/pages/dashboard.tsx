@@ -30,6 +30,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!shop) return;
+    if (charge_id) return;
 
     async function checkBilling() {
       try {
@@ -44,7 +45,7 @@ export default function Dashboard() {
       }
     }
     checkBilling();
-  }, [shop, router]);
+  }, [shop, router, charge_id]);
 
   useEffect(() => {
     if (!shop) return;
@@ -54,11 +55,12 @@ export default function Dashboard() {
         setProducts(p.data || []);
         // const c = await axios.get<Customer[]>(`/api/customers?shop=${shop}`);
         // setCustomers(c.data);
-        setLoading(false);
-
       } catch (err) {
         console.error(err);
         setError("Failed to load data");
+      }
+      finally {
+        setLoading(false);
       }
     }
 
@@ -73,7 +75,6 @@ export default function Dashboard() {
       try {
         const response = await axios.post(`/api/billing/confirm`, { shop, charge_id });
         if (response.data.success) {
-          setLoading(false);
           router.replace(`/dashboard?shop=${shop}`, undefined, { shallow: true });
         }
         else {
@@ -82,6 +83,9 @@ export default function Dashboard() {
 
       } catch (err) {
         console.error("Failed to confirm billing", err);
+      }
+      finally {
+        setLoading(false);
       }
     }
     confirmBilling();

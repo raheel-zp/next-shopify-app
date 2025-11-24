@@ -7,6 +7,7 @@ import {
     Button,
     BlockStack,
     Text,
+    Spinner,
 } from "@shopify/polaris";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -48,6 +49,18 @@ export default function Billing() {
             setError("Failed to create billing session");
         }
     };
+
+    if (loading) {
+        return (
+            <Page>
+                <Layout>
+                    <Layout.Section>
+                        <Spinner size="large" />
+                    </Layout.Section>
+                </Layout>
+            </Page>
+        );
+    }
 
     return (
         <Page title="Approve Billing">
