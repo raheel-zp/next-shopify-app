@@ -33,12 +33,13 @@ export default function IndexPage() {
         setError("Failed to load data");
       }
       finally {
-        setLoading(false);   // <-- done loading
+        setLoading(false);
+        router.push(`/dashboard?shop=${shopName}`);
       }
     }
     checkBilling();
 
-  }, [shopName]);
+  }, [router, shopName]);
 
   const handleInstallClick = () => {
     if (!shopName) {
@@ -65,62 +66,48 @@ export default function IndexPage() {
   return (
     <Page title="Welcome to the Shopify App">
       <Layout>
-        {!billingActive &&
-          <>
-            <Layout.Section>
-              {error && (
-                <Banner tone="critical">
-                  <Text as="p">{error}</Text>
-                </Banner>
-              )}
+        <Layout.Section>
+          {error && (
+            <Banner tone="critical">
+              <Text as="p">{error}</Text>
+            </Banner>
+          )}
 
-              <Card>
-                <BlockStack gap="300">
-                  <Text as="h2" variant="headingMd">
-                    Install Your App
-                  </Text>
+          <Card>
+            <BlockStack gap="300">
+              <Text as="h2" variant="headingMd">
+                Install Your App
+              </Text>
 
-                  <Text as="p">
-                    Enter your store URL to begin the installation process.
-                  </Text>
+              <Text as="p">
+                Enter your store URL to begin the installation process.
+              </Text>
 
-                  <InlineStack gap="200">
-                    <TextField
-                      label="Shopify Store URL"
-                      value={shopName}
-                      onChange={setShopName}
-                      placeholder="example.myshopify.com"
-                      autoComplete="off"
-                    />
+              <InlineStack gap="200">
+                <TextField
+                  label="Shopify Store URL"
+                  value={shopName}
+                  onChange={setShopName}
+                  placeholder="example.myshopify.com"
+                  autoComplete="off"
+                />
 
-                    <Button variant="primary" onClick={handleInstallClick}>
-                      Install App
-                    </Button>
-                  </InlineStack>
-                </BlockStack>
-              </Card>
-            </Layout.Section>
-            <Layout.Section>
-              <BlockStack gap="200">
-                <Text as="p">Alternatively, test with a hardcoded link:</Text>
-                <Link url="/api/auth?shop=new-dev-store-12324471.myshopify.com">
-                  Install App for example store
-                </Link>
-              </BlockStack>
-            </Layout.Section>
-          </>
-        }
-        {billingActive &&
-          <Layout.Section>
-            <BlockStack gap="200">
-
-              <Link url={`/dashboard?shop=${shopName}`}>
-                View Dashboard
-              </Link>
+                <Button variant="primary" onClick={handleInstallClick}>
+                  Install App
+                </Button>
+              </InlineStack>
             </BlockStack>
-          </Layout.Section>
-        }
+          </Card>
+        </Layout.Section>
+        <Layout.Section>
+          <BlockStack gap="200">
+            <Text as="p">Alternatively, test with a hardcoded link:</Text>
+            <Link url="/api/auth?shop=new-dev-store-12324471.myshopify.com">
+              Install App for example store
+            </Link>
+          </BlockStack>
+        </Layout.Section>
       </Layout>
-    </Page>
+    </Page >
   );
 }
