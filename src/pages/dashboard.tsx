@@ -6,6 +6,7 @@ import {
   DataTable,
   Banner,
   Text,
+  Spinner,
 } from "@shopify/polaris";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -24,6 +25,27 @@ export default function Dashboard() {
   const [products, setProducts] = useState<Product[]>([]);
   //const [customers, setCustomers] = useState<Customer[]>([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!shop) return;
+
+    async function checkBilling() {
+      try {
+        const b = await axios.get<{ status: boolean }>(`/api/billingStatus?shop=${shop}`);
+        if (!b.data.status) {
+          router.push(`/billing?shop=${shop}`);
+        }
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load data");
+      }
+      finally {
+        setLoading(false);
+      }
+    }
+    checkBilling();
+  }, [shop, router]);
 
   useEffect(() => {
     if (!shop) return;
@@ -34,11 +56,6 @@ export default function Dashboard() {
         setProducts(p.data || []);
         // const c = await axios.get<Customer[]>(`/api/customers?shop=${shop}`);
         // setCustomers(c.data);
-
-        const b = await axios.get<{ status: boolean }>(`/api/billingStatus?shop=${shop}`);
-        if (!b.data.status) {
-          router.push(`/billing?shop=${shop}`);
-        }
 
       } catch (err) {
         console.error(err);
@@ -75,6 +92,18 @@ export default function Dashboard() {
   //   `${c.firstName} ${c.lastName}`,
   //   c.email,
   // ]);
+
+  if (loading) {
+    return (
+      <Page>
+        <Layout>
+          <Layout.Section>
+            <Spinner size="large" />
+          </Layout.Section>
+        </Layout>
+      </Page>
+    );
+  }
 
   return (
     <Page title="Shopify Dashboard">
