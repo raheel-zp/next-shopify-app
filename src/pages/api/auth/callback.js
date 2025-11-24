@@ -21,10 +21,9 @@ export default async function handler(req, res) {
     });
 
     const client = await clientPromise;
-    const db = client.db("shopify_app"); // Your DB name
+    const db = client.db("shopify_app");
     const collection = db.collection("shops");
 
-    // Upsert shop and token
     await collection.updateOne(
       { shopDomain: shop },
       { $set: { accessToken: data.access_token, updatedAt: new Date() } },

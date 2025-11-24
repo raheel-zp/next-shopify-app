@@ -16,17 +16,21 @@ import axios from "axios";
 import { useRouter } from "next/router";
 
 export default function IndexPage() {
-  const [shopName, setShopName] = useState('new-dev-store-12324471.myshopify.com');
+  const [shopName, setShopName] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
-  const [billingActive, setBillingActive] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function checkBilling() {
       try {
         const b = await axios.get<{ status: boolean }>(`/api/billingStatus?shop=${shopName}`);
-        setBillingActive(b.data.status);
+        if (b.data.status) {
+          router.push(`/dashboard?shop=${shopName}`);
+        }
+        else {
+          router.push(`/billing?shop=${shopName}`);
+        }
       }
       catch (err) {
         console.error(err);
@@ -34,9 +38,6 @@ export default function IndexPage() {
       }
       finally {
         setLoading(false);
-        if (billingActive) {
-          router.push(`/dashboard?shop=${shopName}`);
-        }
       }
     }
     checkBilling();
