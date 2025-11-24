@@ -1,24 +1,15 @@
 // pages/_app.tsx
 
 import type { AppProps } from 'next/app';
-import { Provider as AppBridgeProvider } from "@shopify/app-bridge-react";
 import { AppProvider } from '@shopify/polaris';
 import '@shopify/polaris/build/esm/styles.css';
 import enTranslations from '@shopify/polaris/locales/en.json';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const host = process.env.NEXT_PUBLIC_HOST || "";
-  const config = {
-    apiKey: process.env.NEXT_PUBLIC_SHOPIFY_API_KEY || "",
-    host,
-    forceRedirect: true,
-  };
   return (
-    <AppBridgeProvider config={config}>
-      <AppProvider i18n={enTranslations}>
-        <Component {...pageProps} />
-      </AppProvider>
-    </AppBridgeProvider>
+    <AppProvider i18n={enTranslations}>
+      <Component {...pageProps} />
+    </AppProvider>
   );
 }
 
