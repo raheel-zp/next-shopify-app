@@ -23,19 +23,20 @@ export default function Billing() {
             router.push(`/`);
             return;
         };
+
         async function checkBilling() {
             try {
                 const b = await axios.get<{ status: boolean }>(`/api/billingStatus?shop=${shop}`);
                 if (b.data.status) {
                     router.push(`/dashboard?shop=${shop}`);
                 }
-                else {
-                    setLoading(false);
-                }
             }
             catch (err) {
                 console.error(err);
                 setError("Failed to load data");
+            }
+            finally {
+                setLoading(false);
             }
         }
         checkBilling();
@@ -76,18 +77,16 @@ export default function Billing() {
                     </Layout.Section>
                 )}
 
-                {!loading && (
-                    <Layout.Section>
-                        <Card>
-                            <BlockStack gap="200">
+                <Layout.Section>
+                    <Card>
+                        <BlockStack gap="200">
 
-                                <Button variant="primary" onClick={handleBilling}>
-                                    Subscribe App
-                                </Button>
-                            </BlockStack>
-                        </Card>
-                    </Layout.Section>
-                )}
+                            <Button variant="primary" onClick={handleBilling}>
+                                Subscribe App
+                            </Button>
+                        </BlockStack>
+                    </Card>
+                </Layout.Section>
             </Layout>
         </Page>
     );
