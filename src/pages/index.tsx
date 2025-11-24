@@ -29,7 +29,9 @@ export default function IndexPage() {
           router.push(`/dashboard?shop=${shopName}`);
         }
         else {
-          router.push(`/billing?shop=${shopName}`);
+          if (shopName != '') {
+            router.push(`/billing?shop=${shopName}`);
+          }
         }
       }
       catch (err) {

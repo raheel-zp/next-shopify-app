@@ -12,13 +12,6 @@ import {
 import axios from "axios";
 import { useRouter } from "next/router";
 
-interface Product {
-    id: string;
-    title: string;
-    price: number;
-}
-
-
 export default function Billing() {
     const router = useRouter();
     const { shop, charge_id } = router.query;
