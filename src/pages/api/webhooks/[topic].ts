@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const db = client.db("shopify_app");
 
     switch (topic) {
-      case "app/uninstalled": {
+      case "APP_UNINSTALLED": {
         const shopDomain = body?.domain;
         if (shopDomain) {
           await db.collection("shops").deleteOne({ shopDomain });
@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         break;
       }
 
-      case "products/update": {
+      case "PRODUCTS_UPDATE": {
         const shopDomain = body?.shop_domain;
         const product = body?.product;
 
@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         break;
       }
 
-      case "customers/update": {
+      case "CUSTOMERS_UPDATE": {
         const shopDomain = body?.shop_domain;
         const customer = body?.customer;
 
@@ -54,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         break;
       }
 
-      case "orders/create": {
+      case "ORDERS_CREATE": {
         const shopDomain = body?.shop_domain;
         const order = body?.order;
 

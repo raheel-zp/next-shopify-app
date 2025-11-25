@@ -31,10 +31,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
 
     const topics = [
-    "app/uninstalled",
-    "products/update",
-    "customers/update",
-    "orders/create",
+    "APP_UNINSTALLED",
+    "PRODUCTS_UPDATE",
+    "CUSTOMERS_UPDATE",
+    "ORDERS_CREATE",
   ];
 
   for (const topic of topics) {
