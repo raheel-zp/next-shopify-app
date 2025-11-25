@@ -31,20 +31,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
 
     const topics = [
-    "APP_UNINSTALLED",
-    "PRODUCTS_UPDATE",
-    "CUSTOMERS_UPDATE",
-    "ORDERS_CREATE",
+    "app/uninstalled",
+    "products/update",
+    "customers/update",
+    "orders/create",
   ];
 
   for (const topic of topics) {
-     const newTopic = topic.toLowerCase().replace(/_/g, '/');
     try {
       await axios.post(
         `https://${shop}/admin/api/2025-10/webhooks.json`,
         {
           webhook: {
-            newTopic,
+            topic,
             address: `https://next-shopify-app-mu.vercel.app/api/webhooks/${topic}`,
             format: "json",
           },
@@ -57,8 +56,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       );
       console.log(`Webhook registered for ${topic}`);
+      console.log(`https://next-shopify-app-mu.vercel.app/api/webhooks/${topic}`);
     } catch (err) {
-      console.error(`Failed to register webhook ${newTopic}:`, err);
+      console.error(`Failed to register webhook ${topic}:`, err);
     }
   }
 
