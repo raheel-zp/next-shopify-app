@@ -36,10 +36,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       case "PRODUCTS/UPDATE": {
-        const shopDomain = body?.domain;
-        const product = body?.product;
+        const shopDomain = req.headers["x-shopify-shop-domain"] as string;
+        const product = body;
 
-        console.log("Received PRODUCT", JSON.stringify(product, null, 2));
+        console.log("Product received:", product);
         console.log("Shop domain:", shopDomain);
         if (shopDomain && product) {
           try {
@@ -57,10 +57,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       case "CUSTOMERS/UPDATE": {
-        const shopDomain = body?.domain;
-        const customer = body?.customer;
+        const shopDomain = req.headers["x-shopify-shop-domain"] as string;
+        const customer = body;
 
-        console.log("Received CUSTOMER", JSON.stringify(customer, null, 2));
+        console.log("Shop domain:", shopDomain);
+        console.log("Customer received:", customer);
 
         if (shopDomain && customer) {
           await db.collection("customers").updateOne(
@@ -75,10 +76,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       case "ORDERS/CREATE": {
-        const shopDomain = body?.domain;
-        const order = body?.order;
+        const shopDomain = req.headers["x-shopify-shop-domain"] as string;
+        const order = body;
 
-        console.log("Received ORDER", JSON.stringify(order, null, 2));
+        console.log("Shop domain:", shopDomain);
+        console.log("Order received:", order);
 
         if (shopDomain && order) {
           await db.collection("orders").updateOne(
