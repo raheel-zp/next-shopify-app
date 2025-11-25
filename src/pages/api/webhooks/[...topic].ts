@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).send("Missing topic");
   }
 
-  const topic = topicParts.join("/").toUpperCase(); 
+  const topic = topicParts.join("/").toUpperCase();
   console.log("Webhook fired:", topic);
 
   try {
@@ -39,12 +39,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const shopDomain = body?.shop_domain;
         const product = body?.product;
 
+        console.log("Received PRODUCT", JSON.stringify(product, null, 2));
+        console.log("Shop domain:", shopDomain);
         if (shopDomain && product) {
-          await db.collection("products").updateOne(
-            { id: product.id, shopDomain },
-            { $set: { ...product, updatedAt: new Date() } },
-            { upsert: true }
-          );
+          try {
+            await db.collection("products").updateOne(
+              { id: product.id, shopDomain },
+              { $set: { ...product, shopDomain, updatedAt: new Date() } },
+              { upsert: true }
+            );
+            console.log("Product saved:", product.id);
+          } catch (e) {
+            console.error("Product save error:", e);
+          }
         }
         break;
       }
@@ -53,12 +60,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const shopDomain = body?.shop_domain;
         const customer = body?.customer;
 
+        console.log("Received CUSTOMER", JSON.stringify(customer, null, 2));
+
         if (shopDomain && customer) {
           await db.collection("customers").updateOne(
             { id: customer.id, shopDomain },
-            { $set: { ...customer, updatedAt: new Date() } },
+            { $set: { ...customer, shopDomain, updatedAt: new Date() } },
             { upsert: true }
           );
+
+          console.log("Customer saved:", customer.id);
         }
         break;
       }
@@ -67,12 +78,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const shopDomain = body?.shop_domain;
         const order = body?.order;
 
+        console.log("Received ORDER", JSON.stringify(order, null, 2));
+
         if (shopDomain && order) {
           await db.collection("orders").updateOne(
             { id: order.id, shopDomain },
-            { $set: { ...order, createdAt: new Date() } },
+            { $set: { ...order, shopDomain, createdAt: new Date() } },
             { upsert: true }
           );
+
+          console.log("Order saved:", order.id);
         }
         break;
       }
