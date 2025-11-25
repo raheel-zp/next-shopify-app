@@ -38,8 +38,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   ];
 
   for (const topic of topics) {
+     const newTopic = topic.toLowerCase().replace(/_/g, '/');
     try {
-      const newTopic = topic.toLowerCase().replace(/_/g, '/');
       await axios.post(
         `https://${shop}/admin/api/2025-10/webhooks.json`,
         {
@@ -58,7 +58,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       );
       console.log(`Webhook registered for ${topic}`);
     } catch (err) {
-      console.error(`Failed to register webhook ${topic}:`, err);
+      console.error(`Failed to register webhook ${newTopic}:`, err);
     }
   }
 
