@@ -39,11 +39,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   for (const topic of topics) {
     try {
+      const newTopic = topic.toLowerCase().replace(/_/g, '/');
       await axios.post(
         `https://${shop}/admin/api/2025-10/webhooks.json`,
         {
           webhook: {
-            topic,
+            newTopic,
             address: `https://next-shopify-app-mu.vercel.app/api/webhooks/${topic}`,
             format: "json",
           },
