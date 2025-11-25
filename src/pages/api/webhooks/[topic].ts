@@ -5,6 +5,7 @@ import clientPromise from "../../../lib/mongodb";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { topic } = req.query;
   if (!topic || typeof topic !== "string") return res.status(400).send("Missing topic");
+  console.log("Webhook fired:", topic);
 
   try {
     const body = req.body;
