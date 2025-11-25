@@ -70,13 +70,13 @@ export default function Dashboard() {
           <Layout.Section>
             <Card>
               <ButtonGroup>
-                <Link href={`/products?shop=${shop}`}>
+                <Link href={`/products/dbList?shop=${shop}`}>
                   <Button>Products</Button>
                 </Link>
-                <Link href={`/customers?shop=${shop}`}>
+                <Link href={`/customers/customersList?shop=${shop}`}>
                   <Button>Customers</Button>
                 </Link>
-                <Link href={`/orders?shop=${shop}`}>
+                <Link href={`/orders/ordersList?shop=${shop}`}>
                   <Button>Orders</Button>
                 </Link>
               </ButtonGroup>
