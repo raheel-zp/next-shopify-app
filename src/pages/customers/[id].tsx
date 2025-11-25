@@ -117,7 +117,7 @@ export default function CustomerDetailPage() {
     }
 
     return (
-        <Page title={`Customer: ${customer?.firstName || ""} ${customer?.lastName || ""}`}>
+        <Page title={`Customer: ${customer?.firstName || ""} ${customer?.lastName || ""}`} fullWidth>
             <Layout>
                 <Layout.Section>
                     {error && (

@@ -7,9 +7,11 @@ import {
   Banner,
   Text,
   Spinner,
+  Button,
 } from "@shopify/polaris";
 import axios from "axios";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 interface Product {
   id: string;
@@ -28,9 +30,6 @@ interface Customer {
 export default function Dashboard() {
   const router = useRouter();
   const { shop } = router.query;
-
-  const [products, setProducts] = useState<Product[]>([]);
-  const [customers, setCustomers] = useState<Customer[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [billingActive, setBillingActive] = useState(false);
@@ -49,6 +48,7 @@ export default function Dashboard() {
         }
         else {
           setBillingActive(true);
+          setLoading(false);
         }
       } catch (err) {
         console.error(err);
@@ -57,33 +57,6 @@ export default function Dashboard() {
     }
     checkBilling();
   }, [shop, router]);
-
-  useEffect(() => {
-    if (!shop) return;
-    async function fetchData() {
-      try {
-        const p = await axios.get<Product[]>(`/api/products?shop=${shop}`);
-        setProducts(p.data || []);
-        const c = await axios.get<Customer[]>(`/api/customers?shop=${shop}`);
-        setCustomers(c.data);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load data");
-      }
-      finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, [shop, router]);
-
-  const productRows = products?.map((p) => [p.id, p.title]);
-  const customerRows = customers.map((c) => [
-    `${c.firstName}`,
-    `${c.firstName}`,
-    c.email,
-  ]);
 
   if (loading) {
     return (
@@ -108,28 +81,21 @@ export default function Dashboard() {
           </Layout.Section>
         )}
         {billingActive && (
-          <>
-            <Layout.Section>
-              <Card>
-                <DataTable
-                  columnContentTypes={["text", "text"]}
-                  headings={["ID", "Title"]}
-                  rows={productRows}
-                />
-              </Card>
-            </Layout.Section>
-            <Layout.Section>
-              <Card>
-                <DataTable
-                  columnContentTypes={["text", "text"]}
-                  headings={["First Name", "Last Name", "Email"]}
-                  rows={customerRows}
-                />
-              </Card>
-            </Layout.Section>
-          </>
+          <Layout.Section>
+            <Card>
+              <Link href={`/products?shop=${shop}`}>
+                <Button>Products</Button>
+              </Link>
+              <Link href={`/customers?shop=${shop}`}>
+                <Button>Customers</Button>
+              </Link>
+              <Link href={`/orders?shop=${shop}`}>
+                <Button>Orders</Button>
+              </Link>
+            </Card>
+          </Layout.Section>
         )}
       </Layout>
-    </Page>
+    </Page >
   );
 }
