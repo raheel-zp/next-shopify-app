@@ -3,7 +3,7 @@ import {
   Page,
   Layout,
   Card,
-  InlineGrid,
+  ButtonGroup,
   Banner,
   Text,
   Spinner,
@@ -69,7 +69,7 @@ export default function Dashboard() {
         {billingActive && (
           <Layout.Section>
             <Card>
-              <InlineGrid gap="400" columns={3}>
+              <ButtonGroup>
                 <Link href={`/products?shop=${shop}`}>
                   <Button>Products</Button>
                 </Link>
@@ -79,7 +79,7 @@ export default function Dashboard() {
                 <Link href={`/orders?shop=${shop}`}>
                   <Button>Orders</Button>
                 </Link>
-              </InlineGrid>
+              </ButtonGroup>
             </Card>
           </Layout.Section>
         )}

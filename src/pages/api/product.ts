@@ -1,20 +1,26 @@
-// pages/api/products.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios, { AxiosError } from "axios";
 import clientPromise from "../../lib/mongodb";
 
+interface Variant {
+  id: number;
+  title: string;
+  price: string;
+  inventory_quantity: number;
+}
+
 interface Product {
   id: number;
   title: string;
+  body_html: string;
   status: string;
-  inventory_quantity?: number;
-  variants?: { price: string; id: number }[];
   images?: { src: string }[];
+  variants: Variant[];
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { shop } = req.query;
-  if (!shop) return res.status(400).json({ error: "Missing shop parameter" });
+  const { shop, id } = req.query;
+  if (!shop || !id) return res.status(400).json({ error: "Missing shop or product ID" });
 
   try {
     const client = await clientPromise;
@@ -25,17 +31,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const accessToken = shopDoc.accessToken;
     if (!accessToken) return res.status(401).json({ error: "Token missing" });
 
-    const response = await axios.get<{ products: Product[] }>(
-      `https://${shop}/admin/api/2025-10/products.json?limit=10`,
+    const response = await axios.get<{ product: Product }>(
+      `https://${shop}/admin/api/2025-10/products/${id}.json`,
       {
         headers: { "X-Shopify-Access-Token": accessToken },
       }
     );
 
-    res.status(200).json(response.data.products);
+    res.status(200).json(response.data.product);
   } catch (err: unknown) {
     const error = err as AxiosError;
     console.error(error.response?.data || error.message);
-    res.status(500).json({ error: "Failed to fetch products" });
+    res.status(500).json({ error: "Failed to fetch product" });
   }
 }

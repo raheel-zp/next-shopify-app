@@ -60,7 +60,7 @@ export default function ProductsPage() {
         );
 
     const rows = products.map((p) => [
-        <Image key={p.id} src={p.images?.[0]?.src || ""} alt={p.title} width={50} />,
+        <Image key={p.id} src={p.images?.[0]?.src || ""} alt={p.title} width={50} height={50} />,
         <Link key={p.id} href={`/products/${p.id}?shop=${shop}`}>
             {p.title}
         </Link>,
@@ -70,7 +70,7 @@ export default function ProductsPage() {
     ]);
 
     return (
-        <Page title="Products">
+        <Page title="Products List" fullWidth>
             <Layout>
                 <Layout.Section>
                     <Card>
