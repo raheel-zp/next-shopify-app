@@ -10,9 +10,10 @@ import {
     Spinner,
     DataTable,
     Banner,
-    BlockStack,
+    TextField,
 } from "@shopify/polaris";
 import Image from "next/image";
+
 interface Variant {
     id: number;
     title: string;
@@ -36,20 +37,29 @@ export default function ProductDetailPage() {
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [variantPrices, setVariantPrices] = useState<{ [variantId: number]: string }>({});
+    const [savingVariantId, setSavingVariantId] = useState<number | null>(null);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [priceError, setPriceError] = useState("");
 
+    // Fetch product
     useEffect(() => {
         if (!shop || !id) return;
 
         async function fetchProduct() {
             setLoading(true);
+            setError("");
             try {
-                const resp = await axios.get<Product>(
-                    `/api/product?shop=${shop}&id=${id}`
-                );
+                const resp = await axios.get<Product>(`/api/product?shop=${shop}&id=${id}`);
                 setProduct(resp.data);
+
+                // Initialize variantPrices state
+                const prices: { [variantId: number]: string } = {};
+                resp.data.variants.forEach((v) => (prices[v.id] = v.price));
+                setVariantPrices(prices);
             } catch (err: unknown) {
-                const error = err as AxiosError;
-                console.error(error.response?.data || error.message);
+                const axiosError = err as AxiosError;
+                console.error("Error fetching product:", axiosError.response?.data || axiosError.message);
                 setError("Failed to load product");
             } finally {
                 setLoading(false);
@@ -59,7 +69,51 @@ export default function ProductDetailPage() {
         fetchProduct();
     }, [shop, id]);
 
-    if (loading) return <Spinner size="large" />;
+    // Update single variant price
+    const handleUpdatePrice = async (variantId: number) => {
+        const newPrice = variantPrices[variantId];
+        if (!shop || !id || !newPrice) return;
+
+        setSavingVariantId(variantId);
+        setSuccessMessage("");
+        setPriceError("");
+
+        try {
+            const resp = await axios.post<{ success: boolean; error?: string }>("/api/productUpdatePrice", {
+                shop,
+                id: variantId,
+                price: parseFloat(newPrice),
+            });
+
+            if (resp.data.success) {
+                setSuccessMessage(`Variant ${variantId} price updated successfully!`);
+                setProduct((prev) =>
+                    prev
+                        ? {
+                            ...prev,
+                            variants: prev.variants.map((v) =>
+                                v.id === variantId ? { ...v, price: newPrice } : v
+                            ),
+                        }
+                        : prev
+                );
+            } else {
+                setPriceError(resp.data.error || "Failed to update price");
+            }
+        } catch (err: unknown) {
+            const axiosError = err as AxiosError<{ error?: string }>;
+            setPriceError(axiosError.response?.data?.error || "Error updating price");
+        } finally {
+            setSavingVariantId(null);
+        }
+    };
+
+    if (loading)
+        return (
+            <Page>
+                <Spinner size="large" accessibilityLabel="Loading product..." />
+            </Page>
+        );
 
     if (error)
         return (
@@ -73,44 +127,99 @@ export default function ProductDetailPage() {
     if (!product) return <Page title="Product not found" />;
 
     return (
-        <Page title={`Product: ${product.title}`}>
+        <Page title={`Product: ${product.title}`} fullWidth>
             <Layout>
+                {/* Product Info */}
                 <Layout.Section>
                     <Card>
-                        <BlockStack>
+                        <div style={{ padding: "16px" }}>
                             <Text as="p" variant="headingMd">{product.title}</Text>
-                            <div dangerouslySetInnerHTML={{ __html: product.body_html }} />
-                        </BlockStack>
+                            {product.body_html && (
+                                <div
+                                    style={{ marginTop: "8px" }}
+                                    dangerouslySetInnerHTML={{ __html: product.body_html }}
+                                />
+                            )}
+                        </div>
                     </Card>
                 </Layout.Section>
 
+                {/* Product Images */}
                 {product.images && product.images.length > 0 && (
                     <Layout.Section>
                         <Card>
-                            <BlockStack>
+                            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", padding: "16px" }}>
                                 {product.images.map((img) => (
-                                    <Image key={img.src} src={img.src} alt={product.title} width={150} height={150} />
+                                    <Image
+                                        key={img.src}
+                                        src={img.src}
+                                        alt={product.title}
+                                        width={150}
+                                        height={150}
+                                    />
                                 ))}
-                            </BlockStack>
+                            </div>
                         </Card>
                     </Layout.Section>
                 )}
 
+                {/* Variants Table */}
                 <Layout.Section>
                     <Card>
-                        <DataTable
-                            columnContentTypes={["text", "text", "text", "numeric"]}
-                            headings={["ID", "Title", "Price", "Inventory"]}
-                            rows={product.variants.map((v) => [
-                                v.id,
-                                v.title,
-                                v.price,
-                                v.inventory_quantity,
-                            ])}
-                        />
+                        <div style={{ padding: "16px" }}>
+                            <DataTable
+                                columnContentTypes={["text", "text", "text", "numeric", "text"]}
+                                headings={["ID", "Title", "Price", "Inventory", "Update Price"]}
+                                rows={product.variants.map((v) => [
+                                    v.id.toString(),
+                                    v.title,
+                                    v.price,
+                                    v.inventory_quantity,
+                                    "" // We'll render the input/button below
+                                ])}
+                            />
+                        </div>
                     </Card>
                 </Layout.Section>
 
+                {/* Update Price Form for each variant */}
+                <Layout.Section>
+                    {product.variants.map((v) => (
+                        <Card key={v.id}>
+                            <div style={{ padding: "16px", display: "flex", gap: "8px", alignItems: "flex-end" }}>
+                                <TextField
+                                    label={`Price for ${v.title}`}
+                                    type="number"
+                                    value={variantPrices[v.id] || ""}
+                                    onChange={(val) => setVariantPrices((prev) => ({ ...prev, [v.id]: val }))}
+                                    autoComplete="off"
+                                />
+                                <Button
+                                    onClick={() => handleUpdatePrice(v.id)}
+                                    loading={savingVariantId === v.id}
+                                >
+                                    Update Price
+                                </Button>
+                            </div>
+                        </Card>
+                    ))}
+                </Layout.Section>
+
+                {/* Success/Error Banner */}
+                <Layout.Section>
+                    {successMessage && (
+                        <Banner title="Success" tone="success">
+                            <Text as="p">{successMessage}</Text>
+                        </Banner>
+                    )}
+                    {priceError && (
+                        <Banner title="Error" tone="critical">
+                            <Text as="p">{priceError}</Text>
+                        </Banner>
+                    )}
+                </Layout.Section>
+
+                {/* Edit in Shopify Button */}
                 <Layout.Section>
                     <Button
                         url={`https://${shop}/admin/products/${id}`}
