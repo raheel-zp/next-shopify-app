@@ -30,7 +30,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       { upsert: true }
     );
 
-    // Redirect to a frontend page (e.g., /dashboard page in Next.js)
+    const topics = [
+    "app/uninstalled",
+    "products/update",
+    "customers/update",
+    "orders/create",
+  ];
+
+  for (const topic of topics) {
+    try {
+      await axios.post(
+        `https://${shop}/admin/api/2025-10/webhooks.json`,
+        {
+          webhook: {
+            topic,
+            address: `https://your-app-url.com/api/webhooks/${topic}`,
+            format: "json",
+          },
+        },
+        {
+          headers: {
+            "X-Shopify-Access-Token": data.access_token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(`Webhook registered for ${topic}`);
+    } catch (err) {
+      console.error(`Failed to register webhook ${topic}:`, err);
+    }
+  }
+  
     res.redirect(`/billing?shop=${shop}`);
   }
   catch (err: unknown) {

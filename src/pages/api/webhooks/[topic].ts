@@ -1,0 +1,81 @@
+// pages/api/webhooks/[topic].ts
+import type { NextApiRequest, NextApiResponse } from "next";
+import clientPromise from "../../../lib/mongodb";
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { topic } = req.query;
+  if (!topic || typeof topic !== "string") return res.status(400).send("Missing topic");
+
+  try {
+    const body = req.body;
+    const client = await clientPromise;
+    const db = client.db("shopify_app");
+
+    switch (topic) {
+      case "app/uninstalled": {
+        const shopDomain = body?.domain;
+        if (shopDomain) {
+          await db.collection("shops").deleteOne({ shopDomain });
+          await db.collection("products").deleteMany({ shopDomain });
+          await db.collection("customers").deleteMany({ shopDomain });
+          await db.collection("orders").deleteMany({ shopDomain });
+          console.log("Shop removed from DB:", shopDomain);
+        }
+        break;
+      }
+
+      case "products/update": {
+        const shopDomain = body?.shop_domain;
+        const product = body?.product;
+
+        if (shopDomain && product) {
+          await db.collection("products").updateOne(
+            { id: product.id, shopDomain },
+            { $set: { ...product, updatedAt: new Date() } },
+            { upsert: true }
+          );
+          console.log(`Product updated in DB: ${product.id}`);
+        }
+        break;
+      }
+
+      case "customers/update": {
+        const shopDomain = body?.shop_domain;
+        const customer = body?.customer;
+
+        if (shopDomain && customer) {
+          await db.collection("customers").updateOne(
+            { id: customer.id, shopDomain },
+            { $set: { ...customer, updatedAt: new Date() } },
+            { upsert: true }
+          );
+          console.log(`Customer updated in DB: ${customer.id}`);
+        }
+        break;
+      }
+
+      case "orders/create": {
+        const shopDomain = body?.shop_domain;
+        const order = body?.order;
+
+        if (shopDomain && order) {
+          await db.collection("orders").updateOne(
+            { id: order.id, shopDomain },
+            { $set: { ...order, createdAt: new Date() } },
+            { upsert: true }
+          );
+          console.log(`Order created in DB: ${order.id}`);
+        }
+        break;
+      }
+
+      default:
+        console.log("Unhandled webhook topic:", topic);
+    }
+
+    res.status(200).send("Webhook processed");
+  } catch (err) {
+    console.error("Webhook processing error:", err);
+    res.status(500).send("Webhook processing failed");
+  }
+}
