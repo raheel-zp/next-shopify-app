@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       case "PRODUCTS/UPDATE": {
-        const shopDomain = body?.shop_domain;
+        const shopDomain = body?.domain;
         const product = body?.product;
 
         console.log("Received PRODUCT", JSON.stringify(product, null, 2));
@@ -57,7 +57,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       case "CUSTOMERS/UPDATE": {
-        const shopDomain = body?.shop_domain;
+        const shopDomain = body?.domain;
         const customer = body?.customer;
 
         console.log("Received CUSTOMER", JSON.stringify(customer, null, 2));
@@ -75,7 +75,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       case "ORDERS/CREATE": {
-        const shopDomain = body?.shop_domain;
+        const shopDomain = body?.domain;
         const order = body?.order;
 
         console.log("Received ORDER", JSON.stringify(order, null, 2));
