@@ -44,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         {
           webhook: {
             topic,
-            address: `https://your-app-url.com/api/webhooks/${topic}`,
+            address: `https://next-shopify-app-mu.vercel.app/api/webhooks/${topic}`,
             format: "json",
           },
         },
@@ -60,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.error(`Failed to register webhook ${topic}:`, err);
     }
   }
-  
+
     res.redirect(`/billing?shop=${shop}`);
   }
   catch (err: unknown) {

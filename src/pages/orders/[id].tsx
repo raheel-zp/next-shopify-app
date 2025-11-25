@@ -96,7 +96,7 @@ export default function OrderDetailPage() {
     ]);
 
     return (
-        <Page title={`Order: ${order.name}`}>
+        <Page title={`Order: ${order.name}`} fullWidth>
             <Layout>
                 {error && (
                     <Layout.Section>
