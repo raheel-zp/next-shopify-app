@@ -3,7 +3,7 @@ import {
   Page,
   Layout,
   Card,
-  DataTable,
+  InlineGrid,
   Banner,
   Text,
   Spinner,
@@ -12,20 +12,6 @@ import {
 import axios from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
-
-interface Product {
-  id: string;
-  title: string;
-  price: number;
-}
-
-interface Customer {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-}
-
 
 export default function Dashboard() {
   const router = useRouter();
@@ -83,15 +69,17 @@ export default function Dashboard() {
         {billingActive && (
           <Layout.Section>
             <Card>
-              <Link href={`/products?shop=${shop}`}>
-                <Button>Products</Button>
-              </Link>
-              <Link href={`/customers?shop=${shop}`}>
-                <Button>Customers</Button>
-              </Link>
-              <Link href={`/orders?shop=${shop}`}>
-                <Button>Orders</Button>
-              </Link>
+              <InlineGrid gap="400" columns={3}>
+                <Link href={`/products?shop=${shop}`}>
+                  <Button>Products</Button>
+                </Link>
+                <Link href={`/customers?shop=${shop}`}>
+                  <Button>Customers</Button>
+                </Link>
+                <Link href={`/orders?shop=${shop}`}>
+                  <Button>Orders</Button>
+                </Link>
+              </InlineGrid>
             </Card>
           </Layout.Section>
         )}
