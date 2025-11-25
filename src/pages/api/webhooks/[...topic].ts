@@ -1,10 +1,19 @@
-// pages/api/webhooks/[topic].ts
+// pages/api/webhooks/[...topic].ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "../../../lib/mongodb";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { topic } = req.query;
-  if (!topic || typeof topic !== "string") return res.status(400).send("Missing topic");
+  if (req.method !== "POST") {
+    return res.status(405).send("Method Not Allowed");
+  }
+
+  const topicParts = req.query.topic;
+
+  if (!topicParts || !Array.isArray(topicParts)) {
+    return res.status(400).send("Missing topic");
+  }
+
+  const topic = topicParts.join("/").toUpperCase(); 
   console.log("Webhook fired:", topic);
 
   try {
@@ -13,19 +22,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const db = client.db("shopify_app");
 
     switch (topic) {
-      case "APP_UNINSTALLED": {
+      case "APP/UNINSTALLED": {
         const shopDomain = body?.domain;
         if (shopDomain) {
           await db.collection("shops").deleteOne({ shopDomain });
           await db.collection("products").deleteMany({ shopDomain });
           await db.collection("customers").deleteMany({ shopDomain });
           await db.collection("orders").deleteMany({ shopDomain });
+
           console.log("Shop removed from DB:", shopDomain);
         }
         break;
       }
 
-      case "PRODUCTS_UPDATE": {
+      case "PRODUCTS/UPDATE": {
         const shopDomain = body?.shop_domain;
         const product = body?.product;
 
@@ -35,12 +45,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             { $set: { ...product, updatedAt: new Date() } },
             { upsert: true }
           );
-          console.log(`Product updated in DB: ${product.id}`);
         }
         break;
       }
 
-      case "CUSTOMERS_UPDATE": {
+      case "CUSTOMERS/UPDATE": {
         const shopDomain = body?.shop_domain;
         const customer = body?.customer;
 
@@ -50,12 +59,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             { $set: { ...customer, updatedAt: new Date() } },
             { upsert: true }
           );
-          console.log(`Customer updated in DB: ${customer.id}`);
         }
         break;
       }
 
-      case "ORDERS_CREATE": {
+      case "ORDERS/CREATE": {
         const shopDomain = body?.shop_domain;
         const order = body?.order;
 
@@ -65,18 +73,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             { $set: { ...order, createdAt: new Date() } },
             { upsert: true }
           );
-          console.log(`Order created in DB: ${order.id}`);
         }
         break;
       }
 
       default:
-        console.log("Unhandled webhook topic:", topic);
+        console.log("Unhandled webhook:", topic);
     }
 
-    res.status(200).send("Webhook processed");
-  } catch (err) {
-    console.error("Webhook processing error:", err);
-    res.status(500).send("Webhook processing failed");
+    return res.status(200).send("Webhook processed");
+  } catch (error) {
+    console.error("Webhook error:", error);
+    return res.status(500).send("Webhook processing failed");
   }
 }
