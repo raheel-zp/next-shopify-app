@@ -1,8 +1,11 @@
 // pages/api/billing.js
+import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 import clientPromise from "../../lib/mongodb";
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse) {
   const { shop } = req.query;
   const client = await clientPromise;
   const db = client.db("shopify_app");

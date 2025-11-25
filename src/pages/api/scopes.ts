@@ -1,8 +1,12 @@
 // pages/api/scopes.js
+import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
+import { AxiosError } from "axios";
 import clientPromise from "../../lib/mongodb";
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse) {
   const { shop } = req.query;
   if (!shop) return res.status(400).json({ error: "Shop parameter missing" });
 
@@ -28,10 +32,11 @@ export default async function handler(req, res) {
       }
     );
 
-    const scopes = response.data.access_scopes.map((s) => s.handle);
+    const scopes = response.data.access_scopes.map((s: {handle: string}) => s.handle);
     res.status(200).json({ scopes });
-  } catch (err) {
-    console.error(err.response?.data || err.message);
-    res.status(500).json({ error: "Failed to fetch scopes" });
-  }
+  } catch (err: unknown) {
+      const error = err as AxiosError<{ error?: string }>;
+      console.error("Customer update error:", error.response?.data || error.message);
+      res.status(500).json({ error: "Failed to fetch scopes" });
+    }
 }

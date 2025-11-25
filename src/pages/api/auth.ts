@@ -1,6 +1,8 @@
 // pages/api/auth.js
-
-export default function handler(req, res) {
+import type { NextApiRequest, NextApiResponse } from "next";
+export default function handler(
+  req: NextApiRequest,
+  res: NextApiResponse) {
   const { shop } = req.query;
   if (!shop) {
     return res.status(400).send("Missing shop parameter");

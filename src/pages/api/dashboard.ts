@@ -1,9 +1,27 @@
 // pages/api/dashboard.js
+import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
-
+import clientPromise from "../../lib/mongodb";
 // Assume ACTIVE_SHOP_TOKENS is imported or available via a database/cache layer
 
-export default async function handler(req, res) {
+interface ProductNode {
+  id: string;
+  title: string;
+}
+
+interface ProductEdge {
+  node: ProductNode;
+}
+
+interface ProductsResponse {
+  products: {
+    edges: ProductEdge[];
+  };
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse) {
   const { shop } = req.query;
   const client = await clientPromise;
   const db = client.db("shopify_app");
@@ -26,7 +44,10 @@ export default async function handler(req, res) {
     { query: productsQuery },
     { headers: { "X-Shopify-Access-Token": accessToken } }
   );
-  const products = productsResp.data.data.products.edges.map((e) => e.node);
+  const data = productsResp.data.data as ProductsResponse;
+  const products: ProductNode[] = data.products.edges.map(
+    (e: ProductEdge) => e.node
+  );
 
   res.status(200).json({ products });
 }

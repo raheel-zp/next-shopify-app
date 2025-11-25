@@ -1,7 +1,29 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
+import { AxiosError } from "axios";
 import clientPromise from "../../lib/mongodb";
 
-export default async function handler(req, res) {
+interface CustomerNode {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+interface CustomerEdge {
+  node: CustomerNode;
+}
+
+interface CustomersResponse {
+  customers: {
+    edges: CustomerEdge[];
+  };
+}
+
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse) {
   const { shop } = req.query;
 
   if (!shop) {
@@ -51,12 +73,16 @@ export default async function handler(req, res) {
       console.log("GraphQL errors:", result.data.errors);
     }
 
-    const customers =
-      result.data.data?.customers?.edges?.map((e) => e.node) || [];
+    const customers: CustomerNode[] =
+  (result.data.data as CustomersResponse)?.customers?.edges.map(
+    (e: CustomerEdge) => e.node
+  ) || [];
 
     res.status(200).json(customers);
-  } catch (err) {
-    console.error("Shopify error:", err?.response?.data || err.message);
-    res.status(500).json({ error: "Failed to fetch customers" });
   }
+  catch (err: unknown) {
+      const error = err as AxiosError<{ error?: string }>;
+      console.error("Customer update error:", error.response?.data || error.message);
+      res.status(500).json({ error: "Failed to fetch customers" });
+    }
 }

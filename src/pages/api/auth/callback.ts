@@ -1,8 +1,10 @@
 // pages/api/auth/callback.js
+import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
+import { AxiosError } from "axios";
 import clientPromise from "../../../lib/mongodb";
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { shop, code } = req.query;
   if (!shop || !code) {
     return res.status(400).send("Missing parameters");
@@ -30,8 +32,11 @@ export default async function handler(req, res) {
 
     // Redirect to a frontend page (e.g., /dashboard page in Next.js)
     res.redirect(`/billing?shop=${shop}`);
-  } catch (err) {
-    console.error(err.response?.data || err.message);
+  }
+  catch (err: unknown) {
+    const error = err as AxiosError<{ error?: string }>;
+    console.error("Customer update error:", error.response?.data || error.message);
     res.status(500).send("Error exchanging token");
   }
+
 }
