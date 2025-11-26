@@ -25,8 +25,6 @@ interface Product {
 }
 
 export default function ProductsPage() {
-    const { shop, setShop } = useShop();
-
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
@@ -34,17 +32,25 @@ export default function ProductsPage() {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    // Make sure shop is initialized
+    const { shop, setShop } = useShop();
     const [shopReady, setShopReady] = useState(false);
 
+    // Step 1: initialize shop from cookie on mount
     useEffect(() => {
         if (!shop) {
             const savedShop = Cookies.get("shop");
-            if (savedShop) setShop(savedShop);
-        } else {
+            if (savedShop) {
+                setShop(savedShop);
+            }
+        }
+    }, []);
+
+    // Step 2: mark shop ready when shop state is available
+    useEffect(() => {
+        if (shop) {
             setShopReady(true);
         }
-    }, [shop, setShop]);
+    }, [shop]);
 
     // Fetch products only when shop is ready
     useEffect(() => {
