@@ -13,6 +13,7 @@ import {
     Spinner,
 } from "@shopify/polaris";
 import axios from "axios";
+import Link from "next/link";
 
 interface Customer {
     id: string;
@@ -66,9 +67,9 @@ export default function CustomersPage() {
             <IndexTable.Cell>{c.email}</IndexTable.Cell>
             <IndexTable.Cell>{c.phone || "-"}</IndexTable.Cell>
             <IndexTable.Cell>
-                <a href={`/customers/${c.id}`} style={{ color: "#0a66c2" }}>
+                <Link href={`/customers/${c.id}`} style={{ color: "#0a66c2" }}>
                     View
-                </a>
+                </Link>
             </IndexTable.Cell>
         </IndexTable.Row>
     ));

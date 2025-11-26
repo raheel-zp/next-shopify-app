@@ -6,6 +6,7 @@ import {
   Button,
 } from "@shopify/polaris";
 import ShopLink from "@/components/ShopLink";
+import Link from "next/link";
 
 export default function Dashboard() {
 
@@ -16,18 +17,18 @@ export default function Dashboard() {
         <Layout.Section>
           <Card>
             <ButtonGroup>
-              <ShopLink href={`/products/dbList`}>
+              <Link href={`/products/dbList`}>
                 <Button>Products</Button>
-              </ShopLink>
-              <ShopLink href={`/customers/customersList`}>
+              </Link>
+              <Link href={`/customers/customersList`}>
                 <Button>Customers</Button>
-              </ShopLink>
-              <ShopLink href={`/orders/ordersList`}>
+              </Link>
+              <Link href={`/orders/ordersList`}>
                 <Button>Orders</Button>
-              </ShopLink>
-              <ShopLink href={`/scopes`}>
+              </Link>
+              <Link href={`/scopes`}>
                 <Button>Api Scopes</Button>
-              </ShopLink>
+              </Link>
             </ButtonGroup>
           </Card>
         </Layout.Section>

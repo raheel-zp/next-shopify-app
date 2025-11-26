@@ -12,6 +12,7 @@ import {
 } from "@shopify/polaris";
 import axios from "axios";
 import { useShop } from "@/context/ShopContext";
+import Link from "next/link";
 
 interface Product {
     id: number;
@@ -65,9 +66,9 @@ export default function ProductsPage() {
             <IndexTable.Cell>{p.status}</IndexTable.Cell>
             <IndexTable.Cell>{p.variants?.[0]?.price || "-"}</IndexTable.Cell>
             <IndexTable.Cell>
-                <a href={`/products/${p.id}`} style={{ color: "#0a66c2" }}>
+                <Link href={`/products/${p.id}`} style={{ color: "#0a66c2" }}>
                     View
-                </a>
+                </Link>
             </IndexTable.Cell>
         </IndexTable.Row>
     ));

@@ -10,6 +10,7 @@ import {
 import axios from "axios";
 import ShopLink from "@/components/ShopLink";
 import { useShop } from "@/context/ShopContext";
+import Link from "next/link";
 
 interface Customer {
     id: string;
@@ -45,9 +46,9 @@ export default function CustomersPage() {
 
         return [
             customerId,
-            <ShopLink key={customerId} href={`/customers/${customerId}`}>
+            <Link key={customerId} href={`/customers/${customerId}`}>
                 {c.firstName} {c.lastName}
-            </ShopLink>,
+            </Link>,
             c.email,
         ];
     });

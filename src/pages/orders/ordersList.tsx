@@ -10,6 +10,7 @@ import {
     Spinner,
 } from "@shopify/polaris";
 import axios from "axios";
+import Link from "next/link";
 
 interface Order {
     id: string;
@@ -56,9 +57,9 @@ export default function OrdersPage() {
             <IndexTable.Cell>{o.fulfillmentStatus || "-"}</IndexTable.Cell>
             <IndexTable.Cell>{new Date(o.createdAt).toLocaleString()}</IndexTable.Cell>
             <IndexTable.Cell>
-                <a href={`/orders/${o.id}`} style={{ color: "#0a66c2" }}>
+                <Link href={`/orders/${o.id}`} style={{ color: "#0a66c2" }}>
                     View
-                </a>
+                </Link>
             </IndexTable.Cell>
         </IndexTable.Row>
     ));
