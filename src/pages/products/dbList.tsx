@@ -14,6 +14,7 @@ import axios from "axios";
 import { useShop } from "@/context/ShopContext";
 import Link from "next/link";
 import Cookies from "js-cookie";
+
 interface Product {
     id: number;
     title: string;
@@ -26,13 +27,6 @@ interface Product {
 export default function ProductsPage() {
     const { shop, setShop } = useShop();
 
-    useEffect(() => {
-        if (!shop) {
-            const savedShop = Cookies.get("shop");
-            if (savedShop) setShop(savedShop);
-        }
-    }, [shop, setShop]);
-
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
@@ -40,9 +34,21 @@ export default function ProductsPage() {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    // Load products asynchronously inside the effect
+    // Make sure shop is initialized
+    const [shopReady, setShopReady] = useState(false);
+
     useEffect(() => {
-        if (!shop) return;
+        if (!shop) {
+            const savedShop = Cookies.get("shop");
+            if (savedShop) setShop(savedShop);
+        } else {
+            setShopReady(true);
+        }
+    }, [shop, setShop]);
+
+    // Fetch products only when shop is ready
+    useEffect(() => {
+        if (!shopReady || !shop) return;
 
         const fetchProducts = async () => {
             setLoading(true);
@@ -60,7 +66,11 @@ export default function ProductsPage() {
         };
 
         fetchProducts();
-    }, [shop, page, search, status]); // React re-runs whenever these change
+    }, [shopReady, shop, page, search, status]);
+
+    if (!shopReady) {
+        return <div style={{ padding: 50, textAlign: "center" }}><Spinner size="large" /></div>;
+    }
 
     const productRows = products.map((p, index) => (
         <IndexTable.Row id={String(p.id)} key={p.id} position={index}>
