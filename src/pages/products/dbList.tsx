@@ -64,7 +64,7 @@ export default function ProductsPage() {
         };
 
         fetchProducts();
-    }, [shop, page, search, status, shopReady]);
+    }, [shop, page, search, status]);
 
     const productRows = products.map((p, index) => (
         <IndexTable.Row id={String(p.id)} key={p.id} position={index}>
