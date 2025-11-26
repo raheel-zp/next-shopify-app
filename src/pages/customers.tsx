@@ -8,7 +8,6 @@ import {
     Text,
 } from "@shopify/polaris";
 import axios from "axios";
-import ShopLink from "@/components/ShopLink";
 import { useShop } from "@/context/ShopContext";
 import Link from "next/link";
 

@@ -5,7 +5,6 @@ import {
   ButtonGroup,
   Button,
 } from "@shopify/polaris";
-import ShopLink from "@/components/ShopLink";
 import Link from "next/link";
 
 export default function Dashboard() {

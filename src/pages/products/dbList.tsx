@@ -52,7 +52,7 @@ export default function ProductsPage() {
         }
     }, [shop]);
 
-    // Fetch products only when shop is ready
+    // Load products asynchronously inside the effect
     useEffect(() => {
         if (!shopReady || !shop) return;
 
@@ -72,11 +72,7 @@ export default function ProductsPage() {
         };
 
         fetchProducts();
-    }, [shopReady, shop, page, search, status]);
-
-    if (!shopReady) {
-        return <div style={{ padding: 50, textAlign: "center" }}><Spinner size="large" /></div>;
-    }
+    }, [shop, page, search, status, shopReady]);
 
     const productRows = products.map((p, index) => (
         <IndexTable.Row id={String(p.id)} key={p.id} position={index}>
