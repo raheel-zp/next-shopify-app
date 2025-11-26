@@ -10,7 +10,7 @@ import {
     Text,
 } from "@shopify/polaris";
 import axios from "axios";
-import { useShopRouter } from "@/utils/useShopRouter";
+import { useRouter } from "next/router";
 
 import { GetServerSideProps } from "next";
 import { useShop } from "@/context/ShopContext";
@@ -30,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default function Billing() {
-    const router = useShopRouter();
+    const router = useRouter();
     const { shop } = useShop();
     const { charge_id } = router.query;
     const [error, setError] = useState("");
