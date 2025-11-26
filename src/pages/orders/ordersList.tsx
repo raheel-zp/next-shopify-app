@@ -56,7 +56,7 @@ export default function OrdersPage() {
             <IndexTable.Cell>{o.fulfillmentStatus || "-"}</IndexTable.Cell>
             <IndexTable.Cell>{new Date(o.createdAt).toLocaleString()}</IndexTable.Cell>
             <IndexTable.Cell>
-                <a href={`/orders/${o.id}?shop=${shop}`} style={{ color: "#0a66c2" }}>
+                <a href={`/orders/${o.id}`} style={{ color: "#0a66c2" }}>
                     View
                 </a>
             </IndexTable.Cell>

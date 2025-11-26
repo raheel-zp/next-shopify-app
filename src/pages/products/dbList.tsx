@@ -65,7 +65,7 @@ export default function ProductsPage() {
             <IndexTable.Cell>{p.status}</IndexTable.Cell>
             <IndexTable.Cell>{p.variants?.[0]?.price || "-"}</IndexTable.Cell>
             <IndexTable.Cell>
-                <a href={`/products/${p.id}?shop=${shop}`} style={{ color: "#0a66c2" }}>
+                <a href={`/products/${p.id}`} style={{ color: "#0a66c2" }}>
                     View
                 </a>
             </IndexTable.Cell>

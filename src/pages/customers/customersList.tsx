@@ -66,7 +66,7 @@ export default function CustomersPage() {
             <IndexTable.Cell>{c.email}</IndexTable.Cell>
             <IndexTable.Cell>{c.phone || "-"}</IndexTable.Cell>
             <IndexTable.Cell>
-                <a href={`/customers/${c.id}?shop=${shop}`} style={{ color: "#0a66c2" }}>
+                <a href={`/customers/${c.id}`} style={{ color: "#0a66c2" }}>
                     View
                 </a>
             </IndexTable.Cell>
