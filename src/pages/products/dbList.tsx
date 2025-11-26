@@ -33,7 +33,6 @@ export default function ProductsPage() {
     const [totalPages, setTotalPages] = useState(1);
 
     const { shop, setShop } = useShop();
-    const [shopReady, setShopReady] = useState(false);
 
     useEffect(() => {
         if (!shop) {
@@ -42,19 +41,12 @@ export default function ProductsPage() {
                 setShop(savedShop);
             }
         }
-    }, []);
-
-    useEffect(() => {
-        if (shop) {
-            setShopReady(true);
-        }
-    }, [shop]);
+    }, [shop, setShop]);
 
     // Load products asynchronously inside the effect
     useEffect(() => {
-        console.log(shopReady);
         console.log(shop);
-        if (!shopReady || !shop) return;
+        if (!shop) return;
 
         const fetchProducts = async () => {
             setLoading(true);
