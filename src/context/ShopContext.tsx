@@ -1,5 +1,6 @@
 // context/ShopContext.tsx
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import Cookies from "js-cookie";
 
 interface ShopContextType {
     shop: string | null;
@@ -8,14 +9,38 @@ interface ShopContextType {
 
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
-export function ShopProvider({ children, initialShop }: { children: ReactNode; initialShop?: string }) {
-    const [shop, setShop] = useState<string | null>(initialShop || null);
+export const ShopProvider = ({
+    children,
+    initialShop,
+}: {
+    children: ReactNode;
+    initialShop?: string;
+}) => {
+    const [shop, setShopState] = useState<string | null>(initialShop || null);
 
-    return <ShopContext.Provider value={{ shop, setShop }}>{children}</ShopContext.Provider>;
-}
+    const setShop = (value: string) => {
+        setShopState(value);
+        Cookies.set("shop", value);
+    };
+    useEffect(() => {
+        if (!shop) {
+            const cookieShop = Cookies.get("shop");
+            if (cookieShop) {
+                setTimeout(() => setShopState(cookieShop), 0);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-export function useShop() {
+    return (
+        <ShopContext.Provider value={{ shop, setShop }}>
+            {children}
+        </ShopContext.Provider>
+    );
+};
+
+export const useShop = () => {
     const context = useContext(ShopContext);
-    if (!context) throw new Error("useShop must be used within a ShopProvider");
+    if (!context) throw new Error("useShop must be used within ShopProvider");
     return context;
-}
+};
