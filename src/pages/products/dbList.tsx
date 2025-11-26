@@ -13,7 +13,6 @@ import {
 import axios from "axios";
 import { useShop } from "@/context/ShopContext";
 import Link from "next/link";
-import Cookies from "js-cookie";
 
 interface Product {
     id: number;
@@ -36,7 +35,10 @@ export default function ProductsPage() {
 
     useEffect(() => {
         if (!shop) {
-            const savedShop = Cookies.get("shop");
+            const shopFromCookie = typeof window !== "undefined"
+                ? document.cookie.split("; ").find(c => c.startsWith("shop="))?.split("=")[1]
+                : undefined;
+            const savedShop = shopFromCookie;
             if (savedShop) {
                 setShop(savedShop);
             }
