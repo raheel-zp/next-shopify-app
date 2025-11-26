@@ -1,5 +1,5 @@
 // context/ShopContext.tsx
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 import Cookies from "js-cookie";
 
 interface ShopContextType {
@@ -16,21 +16,14 @@ export const ShopProvider = ({
     children: ReactNode;
     initialShop?: string;
 }) => {
-    const [shop, setShopState] = useState<string | null>(initialShop || null);
+    const [shop, setShopState] = useState<string | null>(() => {
+        return initialShop || Cookies.get("shop") || null;
+    });
 
     const setShop = (value: string) => {
         setShopState(value);
         Cookies.set("shop", value);
     };
-    useEffect(() => {
-        if (!shop) {
-            const cookieShop = Cookies.get("shop");
-            if (cookieShop) {
-                setTimeout(() => setShopState(cookieShop), 0);
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     return (
         <ShopContext.Provider value={{ shop, setShop }}>
