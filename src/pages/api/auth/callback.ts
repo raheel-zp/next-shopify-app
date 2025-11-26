@@ -62,9 +62,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
+    const maxAge = 30 * 24 * 60 * 60;
     res.setHeader(
       "Set-Cookie",
-      `shop=${shop}; Path=/; HttpOnly; SameSite=Lax;`
+      `shop=${shop}; Path=/; Max-Age=${maxAge}; SameSite=Lax; Secure`
     );
 
     res.redirect(`/billing?shop=${shop}`);
