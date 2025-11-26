@@ -1,5 +1,6 @@
 // pages/customers/[id].tsx
 import { useRouter } from "next/router";
+import { useShop } from "@/context/ShopContext";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import Pageloader from "@/components/loader";
@@ -30,7 +31,8 @@ interface Customer {
 
 export default function CustomerDetailPage() {
     const router = useRouter();
-    const { id, shop } = router.query;
+    const { id } = router.query;
+    const { shop } = useShop();
 
     const [customer, setCustomer] = useState<Customer | null>(null);
     const [loading, setLoading] = useState(true);

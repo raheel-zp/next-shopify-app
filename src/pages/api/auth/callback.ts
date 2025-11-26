@@ -31,36 +31,41 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
 
     const topics = [
-    "app/uninstalled",
-    "products/update",
-    "customers/update",
-    "orders/create",
-  ];
+      "app/uninstalled",
+      "products/update",
+      "customers/update",
+      "orders/create",
+    ];
 
-  for (const topic of topics) {
-    try {
-      await axios.post(
-        `https://${shop}/admin/api/2025-10/webhooks.json`,
-        {
-          webhook: {
-            topic,
-            address: `https://next-shopify-app-mu.vercel.app/api/webhooks/${topic}`,
-            format: "json",
+    for (const topic of topics) {
+      try {
+        await axios.post(
+          `https://${shop}/admin/api/2025-10/webhooks.json`,
+          {
+            webhook: {
+              topic,
+              address: `https://next-shopify-app-mu.vercel.app/api/webhooks/${topic}`,
+              format: "json",
+            },
           },
-        },
-        {
-          headers: {
-            "X-Shopify-Access-Token": data.access_token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(`Webhook registered for ${topic}`);
-      console.log(`https://next-shopify-app-mu.vercel.app/api/webhooks/${topic}`);
-    } catch (err) {
-      console.error(`Failed to register webhook ${topic}:`, err);
+          {
+            headers: {
+              "X-Shopify-Access-Token": data.access_token,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(`Webhook registered for ${topic}`);
+        console.log(`https://next-shopify-app-mu.vercel.app/api/webhooks/${topic}`);
+      } catch (err) {
+        console.error(`Failed to register webhook ${topic}:`, err);
+      }
     }
-  }
+
+    res.setHeader(
+      "Set-Cookie",
+      `shop=${shop}; Path=/; HttpOnly; SameSite=Lax;`
+    );
 
     res.redirect(`/billing?shop=${shop}`);
   }

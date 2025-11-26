@@ -1,17 +1,17 @@
-// pages/_app.tsx
+// src/pages/_app.tsx
+import type { AppProps } from "next/app";
+import { AppProvider } from "@shopify/polaris";
+import "@shopify/polaris/build/esm/styles.css";
+import enTranslations from "@shopify/polaris/locales/en.json";
+import { ShopProvider } from "@/context/ShopContext";
 
-import type { AppProps } from 'next/app';
-import { AppProvider } from '@shopify/polaris';
-import '@shopify/polaris/build/esm/styles.css';
-import enTranslations from '@shopify/polaris/locales/en.json';
-import { useShopRouter } from "../utils/useShopRouter";
-
-function MyApp({ Component, pageProps }: AppProps) {
-  useShopRouter();
+function MyApp({ Component, pageProps }: AppProps & { pageProps: { shop?: string } }) {
   return (
-    <AppProvider i18n={enTranslations}>
-      <Component {...pageProps} />
-    </AppProvider>
+    <ShopProvider initialShop={pageProps.shop}>
+      <AppProvider i18n={enTranslations}>
+        <Component {...pageProps} />
+      </AppProvider>
+    </ShopProvider>
   );
 }
 

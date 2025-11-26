@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { useShop } from "@/context/ShopContext";
 import axios, { AxiosError } from "axios";
 import Pageloader from "@/components/loader";
 import {
@@ -49,7 +50,8 @@ interface Order {
 
 export default function OrderDetailPage() {
     const router = useRouter();
-    const { id, shop } = router.query;
+    const { id } = router.query;
+    const { shop } = useShop();
 
     const [order, setOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState(true);

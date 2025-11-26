@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import {
     Page,
     Card,
@@ -12,6 +11,7 @@ import {
     Spinner,
 } from "@shopify/polaris";
 import axios from "axios";
+import { useShop } from "@/context/ShopContext";
 
 interface Product {
     id: number;
@@ -23,8 +23,7 @@ interface Product {
 }
 
 export default function ProductsPage() {
-    const router = useRouter();
-    const { shop } = router.query;
+    const { shop } = useShop();
 
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);

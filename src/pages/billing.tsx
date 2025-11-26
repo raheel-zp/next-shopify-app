@@ -12,9 +12,27 @@ import {
 import axios from "axios";
 import { useShopRouter } from "@/utils/useShopRouter";
 
+import { GetServerSideProps } from "next";
+import { useShop } from "@/context/ShopContext";
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const shop = context.query.shop as string | null;
+
+    if (!shop) {
+        return {
+            redirect: { destination: "/", permanent: false },
+        };
+    }
+
+    return {
+        props: { shop },
+    };
+};
+
 export default function Billing() {
     const router = useShopRouter();
-    const { shop, charge_id } = router.query;
+    const { shop } = useShop();
+    const { charge_id } = router.query;
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
 

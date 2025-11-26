@@ -8,8 +8,8 @@ import {
     Text,
 } from "@shopify/polaris";
 import axios from "axios";
-import { useRouter } from "next/router";
 import ShopLink from "@/components/ShopLink";
+import { useShop } from "@/context/ShopContext";
 
 interface Customer {
     id: string;
@@ -19,8 +19,7 @@ interface Customer {
 }
 
 export default function CustomersPage() {
-    const router = useRouter();
-    const { shop } = router.query;
+    const { shop } = useShop();
 
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [error, setError] = useState("");

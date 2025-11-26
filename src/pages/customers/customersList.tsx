@@ -1,6 +1,6 @@
 // pages/customers/index.tsx
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useShop } from "@/context/ShopContext";
 import {
     Page,
     Card,
@@ -25,8 +25,7 @@ interface Customer {
 }
 
 export default function CustomersPage() {
-    const router = useRouter();
-    const { shop } = router.query;
+    const { shop } = useShop();
 
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [loading, setLoading] = useState(true);

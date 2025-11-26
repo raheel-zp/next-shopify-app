@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/router";
+import { useShop } from "@/context/ShopContext";
 import {
     Page,
     Card,
@@ -22,8 +22,7 @@ interface Order {
 }
 
 export default function OrdersPage() {
-    const router = useRouter();
-    const { shop } = router.query;
+    const { shop } = useShop();
 
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);

@@ -9,9 +9,9 @@ import {
     Banner,
 } from "@shopify/polaris";
 import Pageloader from "@/components/loader";
-import { useRouter } from "next/router";
 import ShopLink from "@/components/ShopLink";
 import Image from "next/image";
+import { useShop } from "@/context/ShopContext";
 
 interface Product {
     id: number;
@@ -23,8 +23,7 @@ interface Product {
 }
 
 export default function ProductsPage() {
-    const router = useRouter();
-    const { shop } = router.query;
+    const { shop } = useShop();
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");

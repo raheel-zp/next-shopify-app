@@ -3,13 +3,13 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 export const runtime = "nodejs";
 export async function middleware(req: NextRequest) {
-    const { pathname, searchParams } = req.nextUrl;
+    const { pathname } = req.nextUrl;
 
     if (pathname.startsWith("/api") || pathname === "/" || pathname.startsWith("/auth") || pathname.startsWith("/billing")) {
         return NextResponse.next();
     }
 
-    const shop = searchParams.get("shop");
+    const shop = req.cookies.get("shop")?.value;
     if (!shop) {
         return NextResponse.redirect(new URL("/", req.url));
     }

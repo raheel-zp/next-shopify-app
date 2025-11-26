@@ -13,6 +13,7 @@ import {
     TextField,
 } from "@shopify/polaris";
 import Image from "next/image";
+import { useShop } from "@/context/ShopContext";
 
 interface Variant {
     id: number;
@@ -32,7 +33,8 @@ interface Product {
 
 export default function ProductDetailPage() {
     const router = useRouter();
-    const { id, shop } = router.query;
+    const { id } = router.query;
+    const { shop } = useShop();
 
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);

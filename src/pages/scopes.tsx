@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import Pageloader from "@/components/loader";
 import { Page, Card, Text, Banner } from "@shopify/polaris";
-import { useRouter } from "next/router";
 import axios from "axios";
+import { useShop } from "@/context/ShopContext";
 
 export default function ScopesPage() {
-    const router = useRouter();
-    const { shop } = router.query;
+    const { shop } = useShop();
 
     const [scopes, setScopes] = useState([]);
     const [loading, setLoading] = useState(true);
