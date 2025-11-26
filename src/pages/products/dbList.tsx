@@ -35,7 +35,6 @@ export default function ProductsPage() {
     const { shop, setShop } = useShop();
     const [shopReady, setShopReady] = useState(false);
 
-    // Step 1: initialize shop from cookie on mount
     useEffect(() => {
         if (!shop) {
             const savedShop = Cookies.get("shop");
@@ -45,7 +44,6 @@ export default function ProductsPage() {
         }
     }, []);
 
-    // Step 2: mark shop ready when shop state is available
     useEffect(() => {
         if (shop) {
             setShopReady(true);
@@ -54,6 +52,8 @@ export default function ProductsPage() {
 
     // Load products asynchronously inside the effect
     useEffect(() => {
+        console.log(shopReady);
+        console.log(shop);
         if (!shopReady || !shop) return;
 
         const fetchProducts = async () => {
