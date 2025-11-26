@@ -143,7 +143,7 @@ export default function OrderDetailPage() {
                 )}
 
                 <Layout.Section>
-                    <ShopLink href={`/orders`}>
+                    <ShopLink href={`/orders/ordersList`}>
                         <Button>Back to Orders</Button>
                     </ShopLink>
                     {shop && (
