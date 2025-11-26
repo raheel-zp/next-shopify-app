@@ -5,13 +5,12 @@ import {
     Layout,
     Card,
     DataTable,
-    Spinner,
     Text,
     Banner,
 } from "@shopify/polaris";
 import Pageloader from "@/components/loader";
 import { useRouter } from "next/router";
-import Link from "next/link";
+import ShopLink from "@/components/ShopLink";
 import Image from "next/image";
 
 interface Product {
@@ -63,9 +62,9 @@ export default function ProductsPage() {
 
     const rows = products.map((p) => [
         <Image key={p.id} src={p.images?.[0]?.src || ""} alt={p.title} width={50} height={50} />,
-        <Link key={p.id} href={`/products/${p.id}?shop=${shop}`}>
+        <ShopLink key={p.id} href={`/products/${p.id}?shop=${shop}`}>
             {p.title}
-        </Link>,
+        </ShopLink>,
         p.status,
         p.inventory_quantity ?? 0,
         p.variants?.[0]?.price ?? "N/A",

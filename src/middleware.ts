@@ -5,7 +5,6 @@ export const runtime = "nodejs";
 export async function middleware(req: NextRequest) {
     const { pathname, searchParams } = req.nextUrl;
 
-    // skip non-app pages
     if (pathname.startsWith("/api") || pathname === "/" || pathname.startsWith("/auth") || pathname.startsWith("/billing")) {
         return NextResponse.next();
     }
@@ -27,10 +26,10 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL("/", req.url));
     }
 
-    console.log("✅ Middleware executed for", pathname, "shop:", shop);
+    console.log("Middleware executed for", pathname, "shop:", shop);
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: "/:path*",
+    matcher: ["/dashboard", "/dashboard/:path*", "/products/:path*", "/customers/:path*", "/orders/:path*"],
 };

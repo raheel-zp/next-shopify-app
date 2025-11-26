@@ -10,7 +10,7 @@ import {
     Banner,
     Text,
 } from "@shopify/polaris";
-import Link from "next/link";
+import ShopLink from "@/components/ShopLink";
 
 interface Order {
     id: number;
@@ -58,9 +58,9 @@ export default function OrdersPage() {
         o.financial_status,
         o.fulfillment_status || "Unfulfilled",
         new Date(o.created_at).toLocaleString(),
-        <Link key={o.id} href={`/orders/${o.id}?shop=${shop}`}>
+        <ShopLink key={o.id} href={`/orders/${o.id}`}>
             View
-        </Link>,
+        </ShopLink>,
     ]);
 
     return (

@@ -14,7 +14,7 @@ import {
     BlockStack,
 } from "@shopify/polaris";
 import axios from "axios";
-import Link from "next/link";
+import ShopLink from "@/components/ShopLink";
 
 interface Customer {
     id: string;
@@ -165,9 +165,9 @@ export default function CustomerDetailPage() {
                                     </a>
                                 )}
 
-                                <Link href={`/customers?shop=${shop}`}>
+                                <ShopLink href={`/customers/customersList`}>
                                     <Button>Back to customers</Button>
-                                </Link>
+                                </ShopLink>
                             </div>
                         </BlockStack>
                     </Card>

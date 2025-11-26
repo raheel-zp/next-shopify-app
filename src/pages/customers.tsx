@@ -9,7 +9,7 @@ import {
 } from "@shopify/polaris";
 import axios from "axios";
 import { useRouter } from "next/router";
-import Link from "next/link";
+import ShopLink from "@/components/ShopLink";
 
 interface Customer {
     id: string;
@@ -46,9 +46,9 @@ export default function CustomersPage() {
 
         return [
             customerId,
-            <Link key={customerId} href={`/customers/${customerId}?shop=${shop}`}>
+            <ShopLink key={customerId} href={`/customers/${customerId}`}>
                 {c.firstName} {c.lastName}
-            </Link>,
+            </ShopLink>,
             c.email,
         ];
     });

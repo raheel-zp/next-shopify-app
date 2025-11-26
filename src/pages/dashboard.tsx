@@ -5,12 +5,9 @@ import {
   ButtonGroup,
   Button,
 } from "@shopify/polaris";
-import { useRouter } from "next/router";
-import Link from "next/link";
+import ShopLink from "@/components/ShopLink";
 
 export default function Dashboard() {
-  const router = useRouter();
-  const { shop } = router.query;
 
   return (
     <Page title="Shopify Dashboard" fullWidth>
@@ -19,18 +16,18 @@ export default function Dashboard() {
         <Layout.Section>
           <Card>
             <ButtonGroup>
-              <Link href={`/products/dbList?shop=${shop}`}>
+              <ShopLink href={`/products/dbList`}>
                 <Button>Products</Button>
-              </Link>
-              <Link href={`/customers/customersList?shop=${shop}`}>
+              </ShopLink>
+              <ShopLink href={`/customers/customersList`}>
                 <Button>Customers</Button>
-              </Link>
-              <Link href={`/orders/ordersList?shop=${shop}`}>
+              </ShopLink>
+              <ShopLink href={`/orders/ordersList`}>
                 <Button>Orders</Button>
-              </Link>
-              <Link href={`/scopes?shop=${shop}`}>
+              </ShopLink>
+              <ShopLink href={`/scopes`}>
                 <Button>Api Scopes</Button>
-              </Link>
+              </ShopLink>
             </ButtonGroup>
           </Card>
         </Layout.Section>

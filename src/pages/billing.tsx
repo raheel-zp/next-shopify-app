@@ -10,10 +10,10 @@ import {
     Text,
 } from "@shopify/polaris";
 import axios from "axios";
-import { useRouter } from "next/router";
+import { useShopRouter } from "@/utils/useShopRouter";
 
 export default function Billing() {
-    const router = useRouter();
+    const router = useShopRouter();
     const { shop, charge_id } = router.query;
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
@@ -29,7 +29,7 @@ export default function Billing() {
             try {
                 const b = await axios.get<{ status: boolean }>(`/api/billingStatus?shop=${shop}`);
                 if (b.data.status) {
-                    router.push(`/dashboard?shop=${shop}`);
+                    router.push(`/dashboard`);
                 }
             }
             catch (err) {
@@ -51,10 +51,10 @@ export default function Billing() {
             try {
                 const response = await axios.post(`/api/billing/confirm`, { shop, charge_id });
                 if (response.data.success) {
-                    router.replace(`/dashboard?shop=${shop}`, undefined, { shallow: true });
+                    router.replace(`/dashboard`, undefined, { shallow: true });
                 }
                 else {
-                    router.push(`/billing?shop=${shop}`);
+                    router.push(`/billing`);
                 }
 
             } catch (err) {

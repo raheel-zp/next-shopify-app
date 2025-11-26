@@ -12,7 +12,7 @@ import {
     Button,
     BlockStack,
 } from "@shopify/polaris";
-import Link from "next/link";
+import ShopLink from "@/components/ShopLink";
 
 interface LineItem {
     id: number;
@@ -143,9 +143,9 @@ export default function OrderDetailPage() {
                 )}
 
                 <Layout.Section>
-                    <Link href={`/orders?shop=${shop}`}>
+                    <ShopLink href={`/orders`}>
                         <Button>Back to Orders</Button>
-                    </Link>
+                    </ShopLink>
                     {shop && (
                         <a href={`https://${shop}/admin/orders/${id}`} target="_blank" rel="noopener noreferrer" style={{ marginLeft: 8 }}>
                             <Button>View in Shopify</Button>
