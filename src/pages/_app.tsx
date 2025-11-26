@@ -1,16 +1,19 @@
-// pages/_app.tsx
-
-import type { AppProps } from 'next/app';
-import { AppProvider } from '@shopify/polaris';
+// src/pages/_app.tsx
+import type { AppProps } from "next/app";
+import { AppProvider } from "@shopify/polaris";
 import '@shopify/polaris/build/esm/styles.css';
 import enTranslations from '@shopify/polaris/locales/en.json';
+import { withBillingGuard } from "@/components/withBillingGuard";
 
-function MyApp({ Component, pageProps }: AppProps) {
+const ProtectedApp = withBillingGuard((props: AppProps) => {
+  const { Component, pageProps } = props;
+  return <Component {...pageProps} />;
+});
+
+export default function MyApp(props: AppProps) {
   return (
     <AppProvider i18n={enTranslations}>
-      <Component {...pageProps} />
+      <ProtectedApp {...props} />
     </AppProvider>
   );
 }
-
-export default MyApp;

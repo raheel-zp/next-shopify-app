@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios, { AxiosError } from "axios";
+import Pageloader from "@/components/loader";
 import {
     Page,
     Layout,
     Card,
     Text,
-    Spinner,
     Banner,
     DataTable,
     Button,
@@ -74,17 +74,7 @@ export default function OrderDetailPage() {
         loadOrder();
     }, [id, shop]);
 
-    if (loading) {
-        return (
-            <Page>
-                <Layout>
-                    <Layout.Section>
-                        <Spinner size="large" />
-                    </Layout.Section>
-                </Layout>
-            </Page>
-        );
-    }
+    if (loading) return <Pageloader />;
 
     if (!order) return null;
 

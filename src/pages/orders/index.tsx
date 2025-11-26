@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import Pageloader from "@/components/loader";
 import {
     Page,
     Layout,
     Card,
     DataTable,
-    Spinner,
     Banner,
     Text,
 } from "@shopify/polaris";
@@ -49,17 +49,7 @@ export default function OrdersPage() {
         fetchOrders();
     }, [shop]);
 
-    if (loading) {
-        return (
-            <Page>
-                <Layout>
-                    <Layout.Section>
-                        <Spinner size="large" />
-                    </Layout.Section>
-                </Layout>
-            </Page>
-        );
-    }
+    if (loading) return <Pageloader />;
 
     const rows = orders.map((o) => [
         o.name,

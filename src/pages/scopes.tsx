@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Page, Card, Text, Spinner, Banner } from "@shopify/polaris";
+import Pageloader from "@/components/loader";
+import { Page, Card, Text, Banner } from "@shopify/polaris";
 import { useRouter } from "next/router";
 import axios from "axios";
 
@@ -40,13 +41,7 @@ export default function ScopesPage() {
         );
     }
 
-    if (loading) {
-        return (
-            <Page title="Scopes">
-                <Spinner size="large" />
-            </Page>
-        );
-    }
+    if (loading) return <Pageloader />;
 
     if (error) {
         return (

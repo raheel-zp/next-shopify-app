@@ -9,6 +9,7 @@ import {
     Text,
     Banner,
 } from "@shopify/polaris";
+import Pageloader from "@/components/loader";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
@@ -48,7 +49,8 @@ export default function ProductsPage() {
         fetchProducts();
     }, [shop]);
 
-    if (loading) return <Spinner size="large" />;
+    if (loading) return <Pageloader />;
+
 
     if (error)
         return (

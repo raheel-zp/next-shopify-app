@@ -2,13 +2,13 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
+import Pageloader from "@/components/loader";
 import {
     Page,
     Layout,
     Card,
     TextField,
     Button,
-    Spinner,
     Banner,
     Text,
     BlockStack,
@@ -104,17 +104,7 @@ export default function CustomerDetailPage() {
         }
     };
 
-    if (loading) {
-        return (
-            <Page>
-                <Layout>
-                    <Layout.Section>
-                        <Spinner size="large" />
-                    </Layout.Section>
-                </Layout>
-            </Page>
-        );
-    }
+    if (loading) return <Pageloader />;
 
     return (
         <Page title={`Customer: ${customer?.firstName || ""} ${customer?.lastName || ""}`} fullWidth>

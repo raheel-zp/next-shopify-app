@@ -6,7 +6,6 @@ import {
     DataTable,
     Banner,
     Text,
-    Spinner,
 } from "@shopify/polaris";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -24,31 +23,7 @@ export default function CustomersPage() {
     const { shop } = router.query;
 
     const [customers, setCustomers] = useState<Customer[]>([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-    const [billingActive, setBillingActive] = useState(false);
-
-    useEffect(() => {
-        if (!shop) return;
-
-        async function checkBilling() {
-            try {
-                const b = await axios.get<{ status: boolean }>(
-                    `/api/billingStatus?shop=${shop}`
-                );
-                if (!b.data.status) {
-                    router.push(`/billing?shop=${shop}`);
-                } else {
-                    setBillingActive(true);
-                }
-            } catch (err) {
-                console.error(err);
-                setError("Failed to verify billing");
-            }
-        }
-
-        checkBilling();
-    }, [shop, router]);
 
     useEffect(() => {
         if (!shop) return;
@@ -60,8 +35,6 @@ export default function CustomersPage() {
             } catch (err) {
                 console.error(err);
                 setError("Failed to load customers");
-            } finally {
-                setLoading(false);
             }
         }
 
@@ -80,18 +53,6 @@ export default function CustomersPage() {
         ];
     });
 
-    if (loading) {
-        return (
-            <Page>
-                <Layout>
-                    <Layout.Section>
-                        <Spinner size="large" />
-                    </Layout.Section>
-                </Layout>
-            </Page>
-        );
-    }
-
     return (
         <Page title="Customers" fullWidth>
             <Layout>
@@ -102,18 +63,15 @@ export default function CustomersPage() {
                         </Banner>
                     </Layout.Section>
                 )}
-
-                {billingActive && (
-                    <Layout.Section>
-                        <Card>
-                            <DataTable
-                                columnContentTypes={["text", "text", "text"]}
-                                headings={["ID", "Name", "Email"]}
-                                rows={rows}
-                            />
-                        </Card>
-                    </Layout.Section>
-                )}
+                <Layout.Section>
+                    <Card>
+                        <DataTable
+                            columnContentTypes={["text", "text", "text"]}
+                            headings={["ID", "Name", "Email"]}
+                            rows={rows}
+                        />
+                    </Card>
+                </Layout.Section>
             </Layout>
         </Page>
     );

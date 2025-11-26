@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios, { AxiosError } from "axios";
+import Pageloader from "@/components/loader";
 import {
     Page,
     Layout,
     Card,
     Text,
     Button,
-    Spinner,
     DataTable,
     Banner,
     TextField,
@@ -108,12 +108,7 @@ export default function ProductDetailPage() {
         }
     };
 
-    if (loading)
-        return (
-            <Page>
-                <Spinner size="large" accessibilityLabel="Loading product..." />
-            </Page>
-        );
+    if (loading) return <Pageloader />;
 
     if (error)
         return (

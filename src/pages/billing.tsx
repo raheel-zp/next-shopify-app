@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Pageloader from "@/components/loader";
 import {
     Page,
     Layout,
@@ -7,7 +8,6 @@ import {
     Button,
     BlockStack,
     Text,
-    Spinner,
 } from "@shopify/polaris";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -79,17 +79,7 @@ export default function Billing() {
         }
     };
 
-    if (loading) {
-        return (
-            <Page>
-                <Layout>
-                    <Layout.Section>
-                        <Spinner size="large" />
-                    </Layout.Section>
-                </Layout>
-            </Page>
-        );
-    }
+    if (loading) return <Pageloader />;
 
     return (
         <Page title="Approve Billing">
