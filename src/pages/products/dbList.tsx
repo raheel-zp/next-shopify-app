@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import { useShop } from "@/context/ShopContext";
 import Link from "next/link";
-
+import Cookies from "js-cookie";
 interface Product {
     id: number;
     title: string;
@@ -24,7 +24,14 @@ interface Product {
 }
 
 export default function ProductsPage() {
-    const { shop } = useShop();
+    const { shop, setShop } = useShop();
+
+    useEffect(() => {
+        if (!shop) {
+            const savedShop = Cookies.get("shop");
+            if (savedShop) setShop(savedShop);
+        }
+    }, [shop, setShop]);
 
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
