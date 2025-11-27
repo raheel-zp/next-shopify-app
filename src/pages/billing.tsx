@@ -48,14 +48,12 @@ export default function Billing() {
                 const b = await axios.get<{ status: boolean }>(`/api/billingStatus?shop=${shop}`);
                 if (b.data.status) {
                     router.push(`/dashboard`);
+                    setLoading(false);
                 }
             }
             catch (err) {
                 console.error(err);
                 setError("Failed to load data");
-            }
-            finally {
-                setLoading(false);
             }
         }
         checkBilling();
@@ -70,16 +68,15 @@ export default function Billing() {
                 const response = await axios.post(`/api/billing/confirm`, { shop, charge_id });
                 if (response.data.success) {
                     router.replace(`/dashboard`, undefined, { shallow: true });
+                    setLoading(false);
                 }
                 else {
                     router.push(`/billing`);
+                    setLoading(false);
                 }
 
             } catch (err) {
                 console.error("Failed to confirm billing", err);
-            }
-            finally {
-                setLoading(false);
             }
         }
         confirmBilling();

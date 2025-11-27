@@ -44,7 +44,6 @@ export default function ProductDetailPage() {
     const [successMessage, setSuccessMessage] = useState("");
     const [priceError, setPriceError] = useState("");
 
-    // Fetch product
     useEffect(() => {
         if (!shop || !id) return;
 
@@ -55,7 +54,6 @@ export default function ProductDetailPage() {
                 const resp = await axios.get<Product>(`/api/product?shop=${shop}&id=${id}`);
                 setProduct(resp.data);
 
-                // Initialize variantPrices state
                 const prices: { [variantId: number]: string } = {};
                 resp.data.variants.forEach((v) => (prices[v.id] = v.price));
                 setVariantPrices(prices);
@@ -71,7 +69,6 @@ export default function ProductDetailPage() {
         fetchProduct();
     }, [shop, id]);
 
-    // Update single variant price
     const handleUpdatePrice = async (variantId: number) => {
         const newPrice = variantPrices[variantId];
         if (!shop || !id || !newPrice) return;
@@ -126,7 +123,6 @@ export default function ProductDetailPage() {
     return (
         <Page title={`Product: ${product.title}`} fullWidth>
             <Layout>
-                {/* Product Info */}
                 <Layout.Section>
                     <Card>
                         <div style={{ padding: "16px" }}>
@@ -141,7 +137,6 @@ export default function ProductDetailPage() {
                     </Card>
                 </Layout.Section>
 
-                {/* Product Images */}
                 {product.images && product.images.length > 0 && (
                     <Layout.Section>
                         <Card>
@@ -160,7 +155,6 @@ export default function ProductDetailPage() {
                     </Layout.Section>
                 )}
 
-                {/* Variants Table */}
                 <Layout.Section>
                     <Card>
                         <div style={{ padding: "16px" }}>
@@ -179,7 +173,6 @@ export default function ProductDetailPage() {
                     </Card>
                 </Layout.Section>
 
-                {/* Update Price Form for each variant */}
                 <Layout.Section>
                     {product.variants.map((v) => (
                         <Card key={v.id}>
@@ -202,7 +195,6 @@ export default function ProductDetailPage() {
                     ))}
                 </Layout.Section>
 
-                {/* Success/Error Banner */}
                 <Layout.Section>
                     {successMessage && (
                         <Banner title="Success" tone="success">
@@ -216,7 +208,6 @@ export default function ProductDetailPage() {
                     )}
                 </Layout.Section>
 
-                {/* Edit in Shopify Button */}
                 <Layout.Section>
                     <Button
                         url={`https://${shop}/admin/products/${id}`}

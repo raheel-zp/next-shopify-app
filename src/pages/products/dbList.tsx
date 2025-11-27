@@ -13,7 +13,6 @@ import {
 import axios from "axios";
 import { useShop } from "@/context/ShopContext";
 import Link from "next/link";
-import Cookies from "js-cookie";
 
 interface Product {
     id: number;
@@ -32,20 +31,9 @@ export default function ProductsPage() {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    const { shop, setShop } = useShop();
+    const { shop } = useShop();
 
     useEffect(() => {
-        if (!shop) {
-            const savedShop = Cookies.get("shop");
-            if (savedShop) {
-                setShop(savedShop);
-            }
-        }
-    }, [shop, setShop]);
-
-    // Load products asynchronously inside the effect
-    useEffect(() => {
-        console.log(shop);
         if (!shop) return;
 
         const fetchProducts = async () => {
